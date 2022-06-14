@@ -1,14 +1,19 @@
 import React from "react";
 import { hot } from "react-hot-loader/root";
-import { loginWithPassword } from "../util/login.util";
-
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from './Login/Login'
+import ChatList from "./ChatsList/ChatList";
 import "./style.css";
 
 function App() {
-  loginWithPassword();
   return (
     <div>
-      <h3>Rocket.Chat Standalone Desktop Application</h3>
+      <Router>
+        <Routes>
+          <Route path='/main_window' element={<Login/>}/>
+          <Route path="/list" element={<ChatList />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
