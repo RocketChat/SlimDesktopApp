@@ -43,6 +43,7 @@
         [
           "@electron-forge/plugin-webpack",
           {
+            "devContentSecurityPolicy": "default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;",
             "mainConfig": "./webpack.main.config.js",
             "renderer": {
               "config": "./webpack.renderer.config.js",
@@ -62,8 +63,18 @@
   "dependencies": {
     "@hot-loader/react-dom": "^17.0.1",
     "@rocket.chat/sdk": "^0.2.9-2",
+    "assert": "^2.0.0",
+    "dotenv": "^16.0.1",
+    "fs": "^0.0.1-security",
+    "http": "^0.0.1-security",
+    "os-browserify": "^0.3.0",
+    "path-browserify": "^1.0.1",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react-dom": "^18.0.0",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "url": "^0.11.0",
+    "util": "^0.12.4"
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",
