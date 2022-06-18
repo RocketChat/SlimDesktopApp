@@ -47,5 +47,8 @@ async function getListOfRooms(){
     return rooms;
 }
 
+function getRoomAvatar(avatarLink: string | undefined) : string {
+    return process.env.ROCKETCHAT_URL + "avatar" + avatarLink;
+}
 
-export { getListOfRooms };
+export { getListOfRooms, getRoomAvatar };
