@@ -1,8 +1,9 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { hot } from "react-hot-loader/root";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import Login from './Login/Login'
 import ChatList from "./ChatsList/ChatList";
+import ChatWindow from "./ChatWindow/ChatWindow";
 import "./style.css";
 
 function App() {
@@ -10,8 +11,9 @@ function App() {
     <div>
       <Router>
         <Routes>
-          <Route path='/main_window' element={<Login/>}/>
+          <Route path='/' exact element={<Login/>}/>
           <Route path="/list" element={<ChatList />} />
+          <Route path="/chat/:id" element={<ChatWindow />} />
         </Routes>
       </Router>
     </div>
