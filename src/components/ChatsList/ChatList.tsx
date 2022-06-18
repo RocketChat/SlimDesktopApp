@@ -9,7 +9,8 @@ import styled from "styled-components"
 const Container = styled.div`
     background-color: #2f343d;
     height:100vh;
-    width:100%;
+    max-width: 500px;
+    overflow: hidden;
 `
 
 function ChatList() {
