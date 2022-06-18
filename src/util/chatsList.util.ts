@@ -5,6 +5,11 @@ async function getListOfRooms(){
     let res:JSON = await api.get('rooms.get');
     let rooms = res.update;
 
+    let userID: string|undefined = api.currentLogin?.userId;
+    let username: string|undefined = await getUsernameFromID(userID);
+    // TODO:: Replace by | when the SDK is fixed
+    //let username: string = api.currentLogin?.username;
+
     rooms = rooms.filter((room: Room) => {
         return room.lm != undefined
     });
@@ -25,12 +30,6 @@ async function getListOfRooms(){
 
         if(!newRoom.name && room.usernames){
             // check if current user, return the other
-            let userID: string = api.currentLogin?.userId;
-            let username: string = getUsernameFromID(userID);
-
-            // TODO:: Replace by | when the SDK is fixed
-            //let username: string = api.currentLogin?.username;
-
             if(username == room.usernames[1]){
                 newRoom.name = room.usernames[0];
                 newRoom.avatarLink =  "/" + room.usernames[0];
