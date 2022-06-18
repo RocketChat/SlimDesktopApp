@@ -1,6 +1,9 @@
 import React from "react";
 import { hot } from "react-hot-loader/root";
 import styled from "styled-components"
+import Room from "../../../interfaces/room";
+import { getRoomAvatar } from "../../../util/chatsList.util";
+const { ipcRenderer } = window.require("electron");
 
 const Container = styled.div`
     display: flex;
@@ -37,18 +40,25 @@ function List(props: JSON) {
     return (
         <Container column marginTop="10px" overflowScroll>
             {rooms != null ? rooms.map((room: any) => (
-            <ChatItem key={room.id} lastMessageDate={room.lastMessageDate} roomId={room.id} name={room.name} message={room.lastMessage} avatarLink={room.avatarLink} />
+            <ChatItem key={room.id} lastMessageDate={room.lastMessageDate} id={room.id} name={room.name} lastMessage={room.lastMessage} avatarLink={room.avatarLink} />
             )):null}
         </Container>
     );
 }
 
-function ChatItem(props: JSON) {
+function ChatItem(props: Room) {
+
+    const openChatWindow = () => {
+        ipcRenderer.send("create-window-chat", {
+            ...props
+        });
+    }
+
     return (
-        <ChatItemContainer>
+        <ChatItemContainer onDoubleClick={openChatWindow}>
             <div style={{flex: 1}}>
                 <ProfileImage
-                    src={process.env.ROCKETCHAT_URL + "avatar" + props.avatarLink} // TODO:: Check the forward slash before /avatar exist
+                    src={getRoomAvatar(props.avatarLink)} // TODO:: Check the forward slash before /avatar exist
                     style={{margin:'4px'}} />
             </div>
             <div style={{flex:12}}>
@@ -62,8 +72,8 @@ function ChatItem(props: JSON) {
                     </div>*/}
                 </div>
                 <div style={{fontSize:'14px', color:'#FFF', whiteSpace:"nowrap", overflow: "hidden", textOverflow:"ellipsis", display:"inherit"}}>
-                    {props.message ? props.message.u.name + ": " : "No Messages Yet"}
-                    {props.message ? props.message.msg : ""}
+                    {props.lastMessage ? props.lastMessage.u.name + ": " : "No Messages Yet"}
+                    {props.lastMessage ? props.lastMessage.msg : ""}
                 </div>
             </Container></div>
         </ChatItemContainer>
