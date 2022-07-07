@@ -1,16 +1,17 @@
 import { api } from '@rocket.chat/sdk';
 import { getUsernameFromID } from './user.util';
-import Room from '../interfaces/room';
-async function getListOfRooms(){
-    let res:JSON = await api.get('rooms.get');
-    let rooms = res.update;
+import { Room, RoomResultAPI } from '../interfaces/room';
+
+async function getListOfRooms() : Promise<Room[]> {
+    let res:any = await api.get('rooms.get');
+    let rooms:RoomResultAPI[] = res.update;
 
     let userID: string|undefined = api.currentLogin?.userId;
     let username: string|undefined = await getUsernameFromID(userID);
     // TODO:: Replace by | when the SDK is fixed
     //let username: string = api.currentLogin?.username;
 
-    rooms = rooms.filter((room: Room) => {
+    rooms = rooms.filter((room: RoomResultAPI) => {
         return room.lm != undefined
     });
 
@@ -18,7 +19,7 @@ async function getListOfRooms(){
         return (new Date(first.lm) < new Date(second.lm)) ? 1 : -1;
     });
 
-    rooms = rooms.map((room: Room) => {
+    let newRooms: Room[] = rooms.map((room: RoomResultAPI) => {
 
         let newRoom:Room = {
             id: room._id,
@@ -44,10 +45,10 @@ async function getListOfRooms(){
     });
 
 
-    return rooms;
+    return newRooms;
 }
 
-function getRoomAvatar(avatarLink: string | undefined) : string {
+function getRoomAvatar(avatarLink: string | undefined | null) : string {
     return process.env.ROCKETCHAT_URL + "avatar" + avatarLink;
 }
 
