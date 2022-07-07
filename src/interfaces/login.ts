@@ -10,3 +10,9 @@ export interface LoginResultAPI {
         userId: string;
     };
 }
+
+export interface LoginResultRealtime {
+    id: string;
+    token: string;
+    type: string;
+}
