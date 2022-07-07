@@ -1,7 +1,7 @@
 import React from "react";
 import { hot } from "react-hot-loader/root";
 import styled from "styled-components"
-import Room from "../../../interfaces/room";
+import { Room } from "../../../interfaces/room";
 import { getRoomAvatar } from "../../../util/chatsList.util";
 const { ipcRenderer } = window.require("electron");
 
@@ -39,7 +39,7 @@ function List(props: JSON) {
     let rooms: any = props.rooms;
     return (
         <Container column marginTop="10px" overflowScroll>
-            {rooms != null ? rooms.map((room: any) => (
+            {rooms != null ? rooms.map((room: Room) => (
             <ChatItem key={room.id} lastMessageDate={room.lastMessageDate} id={room.id} name={room.name} lastMessage={room.lastMessage} avatarLink={room.avatarLink} />
             )):null}
         </Container>

@@ -1,7 +1,19 @@
-export default interface Room {
+export interface Room {
     id: string;
-    _id?: string;
 
+    name: string;
+
+    lastMessage?: string;
+    lm?: string;
+    lastMessageDate?: string;
+
+    avatarLink?: string;
+
+    usernames?: string[];
+}
+
+export interface RoomResultAPI {
+    _id: string;
     name: string;
     fname?: string;
 
@@ -13,3 +25,4 @@ export default interface Room {
 
     usernames?: string[];
 }
+

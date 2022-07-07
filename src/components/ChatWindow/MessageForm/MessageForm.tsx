@@ -4,9 +4,10 @@ import styled from "styled-components"
 
 const Container = styled.div`
     position: fixed;
-    bottom: 10px;
+    bottom: 0px;
     width:97%;
     padding: 10px 20px;
+    background-color: #FFF;
 `
 
 const TextInput = styled.textarea`

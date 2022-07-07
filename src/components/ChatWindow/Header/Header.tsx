@@ -7,13 +7,16 @@ import { useSearchParams } from "react-router-dom";
 import { getRoomAvatar } from "../../../util/chatsList.util";
 
 const Container = styled.div`
-    position: fixed;
     width:100%;
+    position:fixed;
     display: flex;
     align-items: center;
     justify-content: center;
     border-bottom:1px solid #eeeff1;
     padding:8px 0px 8px 15px;
+    height:2.5rem;
+    overflow: hidden;
+    background-color: #FFF;
 `
 
 const ImageContainer = styled.div`
