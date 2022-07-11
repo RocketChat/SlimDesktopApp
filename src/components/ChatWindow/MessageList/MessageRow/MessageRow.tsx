@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, MouseEvent } from "react";
 import { hot } from "react-hot-loader/root";
 import styled from "styled-components";
-import { RealtimeAPIMessage } from '../../../interfaces/message';
-import { getRoomAvatar } from '../../../util/chatsList.util';
+import { RealtimeAPIMessage } from '../../../../interfaces/message';
+import { getRoomAvatar } from '../../../../util/chatsList.util';
+import MessageBodyRender from './components/MessageBodyRender';
 const MessageContainer = styled.div`
     width:100%;
     display: flex;
@@ -45,6 +46,15 @@ const MessageBody = styled.div`
     }
 `
 
+const onUserMentionClick = (username: string) => (e: MouseEvent<HTMLDivElement>) : void => {
+    console.log("Username " + username + " was clicked!");
+}
+
+const onChannelMentionClick = (channel: string) => (e: MouseEvent<HTMLDivElement>) : void => {
+    console.log("Channel " + channel + " was clicked!");
+}
+
+
 function MessageRow(props : any) {
     const message: RealtimeAPIMessage = props.message;
     const messageDate = new Date(message.ts["$date"]);
@@ -58,7 +68,13 @@ function MessageRow(props : any) {
                     <div style={{color: "#9ea2a8", fontSize:"12px", marginLeft:'4px'}}>{messageDate.getHours() + ":" + messageDate.getMinutes()}</div>
                 </MessageInfo>
                 <MessageBody>
-                    <p>{message.msg}</p>
+                    <MessageBodyRender
+						onUserMentionClick={onUserMentionClick}
+						onChannelMentionClick={onChannelMentionClick}
+						mentions={message?.mentions || []}
+						channels={message?.channels || []}
+						tokens={message.md || []}
+					/>
                 </MessageBody>
             </BodyContainer>
         </MessageContainer>
