@@ -43,7 +43,7 @@ yarn start
 
 ### What's Done till now
 - [x] Code-Fixed Authentication System
-- [x] All Chats List within a single window
+- [x] All Channels List within a single window
 - [x] Pop-up a new window for each chat which clicked over
 - [x] Real-time Subscription for messages within each window
 - [x] Retrieval of messages of each chat with pagination
@@ -51,3 +51,15 @@ yarn start
 - [ ] Main Chat Window Functionalities (Send/Delete/Edit/Star/...etc) Messages
 
 ### Screenshots
+
+- Code-fixed Login
+
+![image](https://user-images.githubusercontent.com/34144004/178370003-55790350-1b11-44dd-b20e-cebfa7291efa.png)
+
+- Chats/Channels Window
+
+![image](https://user-images.githubusercontent.com/34144004/178370148-5cc8bf5b-6119-4366-86a8-a3efffcef21d.png)
+
+- Single Chat Window
+
+![image](https://user-images.githubusercontent.com/34144004/178370391-26c815b2-3dec-4d8e-a50d-7ad565104452.png)
