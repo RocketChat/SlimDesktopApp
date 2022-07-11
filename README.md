@@ -13,7 +13,7 @@ $ cd SlimDesktopApp
 
 3. Install depenedencies
 ```sh
-$ npm install
+$ yarn
 ```
 
 4. Create your .ENV file and add needed variables 
@@ -26,5 +26,5 @@ REACT_APP_PASSWORD = password_1234
 
 5. Run the application
 ```sh
-$ npm run start
+$ yarn start
 ```
