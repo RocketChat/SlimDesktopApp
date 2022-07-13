@@ -1,7 +1,7 @@
 import React from "react";
 import { hot } from "react-hot-loader/root";
 import styled from "styled-components";
-import MessageRow from './MessageRow';
+import MessageRow from './MessageRow/MessageRow';
 import { RealtimeAPIMessage } from '../../../interfaces/message';
 const Container = styled.div`
     overflow: hidden;
