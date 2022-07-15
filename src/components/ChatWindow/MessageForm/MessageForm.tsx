@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { hot } from "react-hot-loader/root";
 import styled from "styled-components"
+import { sendTextMessage, editTextMessage } from "../../../util/message.util";
+import { useParams } from "react-router-dom";
+import { RealtimeAPIMessage } from '../../../interfaces/message';
 
 const Container = styled.div`
     position: fixed;
@@ -25,11 +28,45 @@ const TextInput = styled.textarea`
 `
 
 
-function MessageForm() {
+function MessageForm(props: any) {
+    const { id: roomId } = useParams();
+    const [message, setMessage] = useState("");
+
+    const onMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        setMessage(e.target.value);
+    }
+
+    const onPressSendMessage = async (e: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        if(e.keyCode == 13 && e.shiftKey == false) {
+            e.preventDefault();
+            if(await sendMessage()){
+                setMessage("");
+            }
+        }
+    }
+
+    const sendMessage = async () => {
+        // Send New Message
+        if(!props.messageToEdit){
+            return await sendTextMessage(roomId, message);
+        }
+
+        // Edit Existing Message
+        const messageToEdit: RealtimeAPIMessage = props.messageToEdit;
+        props.setMessageToEdit(null);
+        return await editTextMessage(messageToEdit, message);
+    }
+
+    useEffect(() => {
+        if(props.messageToEdit){
+            setMessage(props.messageToEdit.msg);
+        }
+    }, [props.messageToEdit]);
+
     return (
-    <Container>
-        <TextInput placeholder={"Message"} />
-    </Container>
+        <Container>
+            <TextInput placeholder={"Message"} onChange={onMessageChange} onKeyDown={onPressSendMessage} value={message} />
+        </Container>
     );
 }
 
