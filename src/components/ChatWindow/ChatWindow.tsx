@@ -1,4 +1,3 @@
-import { driver } from "@rocket.chat/sdk"
 import React, { useEffect, useState } from "react";
 import { hot } from "react-hot-loader/root";
 import { useParams } from "react-router-dom";
@@ -6,7 +5,7 @@ import { realTimeLoginWithAuthToken } from "../../util/login.util";
 import Header from './Header/Header';
 import MessageForm from "./MessageForm/MessageForm";
 import MessageList from './MessageList/MessageList';
-import { loadMessagesFromRoom } from '../../util/chatsWindow.util';
+import { loadMessagesFromRoom, realTimeSubscribeToRoom } from '../../util/chatsWindow.util';
 import { RealtimeAPIMessage } from '../../interfaces/message';
 import styled from "styled-components"
 
@@ -46,8 +45,7 @@ function ChatWindow() {
   }
 
   const realTimeSubscribe = async () => {
-    await driver.subscribeToMessages();
-    await driver.reactToMessages( processMessages );
+    await realTimeSubscribeToRoom(id, processMessages);
   }
 
 
