@@ -15,8 +15,9 @@ const MessageContainer = styled.div`
     cursor: pointer;
     margin: 0 5px 0 5px;
     &:hover {
-        background-color:rgba(186, 186, 186, 0.1);
+        background-color: ${(props: { isEditing: boolean; }) => !props.isEditing ? "rgba(186, 186, 186, 0.1)" : "#fff6d6"};
     }
+    background-color: ${(props: { isEditing: boolean; }) => !props.isEditing ? "transparent" : "#fff6d6"};
 `
 
 const ProfileImage = styled.img`
@@ -59,10 +60,12 @@ const onChannelMentionClick = (channel: string) => (e: MouseEvent<HTMLDivElement
 
 function MessageRow(props : any) {
     const [isShowActionsModal, setActionsModal] = useState(false);
+    const [isMessageBeingEdited, setIsEdited] = useState(false);
     const message: RealtimeAPIMessage = props.message;
     const messageDate = new Date(message.ts["$date"]);
 
     const editMessage = () => {
+        setIsEdited(true);
         props.onEditMessageAction(message);
     }
 
@@ -78,8 +81,12 @@ function MessageRow(props : any) {
         setActionsModal(false);
     }
 
+    useEffect(() => {
+        setIsEdited(false);
+    }, [props.message]);
+
     return (
-        <MessageContainer onMouseEnter={showActionsModal} onMouseLeave={hideActionsModal}>
+        <MessageContainer onMouseEnter={showActionsModal} onMouseLeave={hideActionsModal} isEditing={isMessageBeingEdited}>
             <ProfileImage src={getRoomAvatar("/" + message.u.username)}/>
             <BodyContainer>
                 <MessageInfo>
