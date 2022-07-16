@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { RealtimeAPIMessage } from "../../../../interfaces/message";
 import { getRoomAvatar } from "../../../../util/chatsList.util";
 import MessageBodyRender from "./components/MessageBodyRender";
+import ParseOtherMessageTypes from "./components/MessageBodyRender/MessageType";
 import MessageActions from "./components/MessageActions/MessageActions";
 import { deleteMessageById } from "../../../../util/message.util";
 const MessageContainer = styled.div`
@@ -11,7 +12,7 @@ const MessageContainer = styled.div`
     display: flex;
     justify-content: normal;
     align-items: start;
-    padding: 10px 10px;
+    padding: 5px 10px;
     cursor: pointer;
     margin: 0 5px 0 5px;
     &:hover {
@@ -21,10 +22,10 @@ const MessageContainer = styled.div`
 `
 
 const ProfileImage = styled.img`
-    height:31px;
-    width:31px;
     border-radius:15%;
     margin-right: 3px;
+    height: ${(props: { isNormalMessageType: boolean; }) => props.isNormalMessageType ? "31px" : "1.125rem"};
+    width: ${(props: { isNormalMessageType: boolean; }) => props.isNormalMessageType ? "31px" : "1.125rem"};
 `
 
 const BodyContainer = styled.div`
@@ -102,31 +103,36 @@ function MessageRow(props : any) {
 
     return (
         <MessageContainer onMouseEnter={showActionsModal} onMouseLeave={hideActionsModal} isEditing={isMessageBeingEdited}>
-            <ProfileImage src={getRoomAvatar("/" + message.u.username)}/>
-            <BodyContainer>
-                <MessageInfo>
-                    <div style={{color: "#2f343d", fontWeight:"bold", fontSize:"14px"}}>{message.u.name}</div>
-                    <div style={{color: "#9ea2a8", fontSize:"13px", marginLeft:'4px'}}>{message.u.username}</div>
-                    <div style={{color: "#9ea2a8", fontSize:"12px", marginLeft:'4px'}}>{messageDate.getHours() + ":" + messageDate.getMinutes()}</div>
-                    <MessageActions
-                        onMessageDelete = {deleteMessage}
-                        onMessageEdit = {editMessage}
-                        show={isShowActionsModal}
-                    />
-                </MessageInfo>
-                <MessageBody>
-                    <MessageBodyRender
-						onUserMentionClick={onUserMentionClick}
-						onChannelMentionClick={onChannelMentionClick}
-						mentions={message?.mentions || []}
-						channels={message?.channels || []}
-						tokens={message.md || []}
-					/>
-                </MessageBody>
-            </BodyContainer>
+            <ProfileImage src={getRoomAvatar("/" + message.u.username)} isNormalMessageType={!message.t}/>
+            {
+                message.t ? (
+                    <ParseOtherMessageTypes message={message} />
+                ) : (
+                    <BodyContainer>
+                        <MessageInfo>
+                            <div style={{color: "#2f343d", fontWeight:"bold", fontSize:"14px"}}>{message.u.name}</div>
+                            <div style={{color: "#9ea2a8", fontSize:"13px", marginLeft:'4px'}}>{message.u.username}</div>
+                            <div style={{color: "#9ea2a8", fontSize:"12px", marginLeft:'4px'}}>{messageDate.getHours() + ":" + messageDate.getMinutes()}</div>
+                            <MessageActions
+                                onMessageDelete = {deleteMessage}
+                                onMessageEdit = {editMessage}
+                                show={isShowActionsModal}
+                            />
+                        </MessageInfo>
+                        <MessageBody>
+                            <MessageBodyRender
+                                onUserMentionClick={onUserMentionClick}
+                                onChannelMentionClick={onChannelMentionClick}
+                                mentions={message?.mentions || []}
+                                channels={message?.channels || []}
+                                tokens={message.md || []}
+                            />
+                        </MessageBody>
+                    </BodyContainer>
+                )
+            }
         </MessageContainer>
-
-);
+    );
 }
 
 export default hot(MessageRow);
