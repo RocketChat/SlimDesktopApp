@@ -18,4 +18,6 @@ export interface RealtimeAPIMessage {
     } & Pick<User, "_id" | "username" | "name">)[];
     channels: ChannelMention[];
     md?: ReturnType<typeof parse>;
+    role?: string;
+    t?: string;
 }
