@@ -34,7 +34,7 @@ function MessageList(props : any) {
             </ShowMoreMessages>
             {messages ? Object.keys(messages).map((messageId: string) => {
                 return (
-                    <MessageRow key={messageId} message={messages[messageId]} onEditMessageAction={props.onEditMessageAction} />
+                    <MessageRow key={messageId} message={messages[messageId]} onEditMessageAction={props.onEditMessageAction} setMessageToEdit={props.setMessageToEdit} />
                 );
             }) : null}
         </Container>

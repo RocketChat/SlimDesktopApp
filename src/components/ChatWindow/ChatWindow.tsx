@@ -94,7 +94,7 @@ function ChatWindow() {
       <HeaderFooterContainer>
         <Header />
       </HeaderFooterContainer>
-      <MessageList messages={messages} loadMoreMessages={loadMoreMessages} onEditMessageAction={onEditMessageAction} />
+      <MessageList messages={messages} loadMoreMessages={loadMoreMessages} onEditMessageAction={onEditMessageAction} setMessageToEdit={setMessageToEdit} />
       <HeaderFooterContainer>
         <MessageForm messageToEdit={messageToEdit} setMessageToEdit={setMessageToEdit} />
       </HeaderFooterContainer>

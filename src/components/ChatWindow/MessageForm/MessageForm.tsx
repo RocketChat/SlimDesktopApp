@@ -60,6 +60,8 @@ function MessageForm(props: any) {
     useEffect(() => {
         if(props.messageToEdit){
             setMessage(props.messageToEdit.msg);
+        } else {
+            setMessage("");
         }
     }, [props.messageToEdit]);
 

@@ -85,6 +85,21 @@ function MessageRow(props : any) {
         setIsEdited(false);
     }, [props.message]);
 
+    useEffect(() => {
+        const deleteMessageToEditOnESC = (event:any) => {
+            if (event.key === 'Escape') {
+              event.preventDefault();
+              setIsEdited(false);
+              props.setMessageToEdit(null);
+            }
+        };
+
+        document.addEventListener('keydown', deleteMessageToEditOnESC);
+        return () => {
+            document.removeEventListener('keydown', deleteMessageToEditOnESC);
+        };
+    }, []);
+
     return (
         <MessageContainer onMouseEnter={showActionsModal} onMouseLeave={hideActionsModal} isEditing={isMessageBeingEdited}>
             <ProfileImage src={getRoomAvatar("/" + message.u.username)}/>
