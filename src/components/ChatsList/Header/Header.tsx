@@ -30,7 +30,7 @@ const Icon = styled.div`
 `
 
 function Header() {
-    const [username, setUsername] = useState(null);
+    const [username, setUsername] = useState<string | undefined>();
 
     const getUsername = async () => {
         setUsername(await getUsernameFromID(api.currentLogin?.userId));

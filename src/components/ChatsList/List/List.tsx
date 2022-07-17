@@ -35,7 +35,7 @@ const ProfileImage = styled.img`
 
 
 
-function List(props: JSON) {
+function List(props: any) {
     let rooms: any = props.rooms;
     return (
         <Container column marginTop="10px" overflowScroll>

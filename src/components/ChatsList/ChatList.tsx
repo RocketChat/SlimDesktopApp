@@ -5,6 +5,7 @@ import Footer from "./Footer/Footer";
 import Header from "./Header/Header";
 import List from "./List/List";
 import styled from "styled-components"
+import { Room } from "../../interfaces/room";
 
 const Container = styled.div`
     background-color: #2f343d;
@@ -15,7 +16,7 @@ const Container = styled.div`
 
 function ChatList() {
 
-  const [rooms, setRooms] = useState(null);
+  const [rooms, setRooms] = useState<Room[]>([]);
 
   const getRoomsList = async () => {
     setRooms(await getListOfRooms());
