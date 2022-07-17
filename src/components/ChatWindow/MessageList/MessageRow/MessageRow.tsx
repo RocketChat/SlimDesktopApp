@@ -7,6 +7,7 @@ import MessageBodyRender from "./components/MessageBodyRender";
 import ParseOtherMessageTypes from "./components/MessageBodyRender/MessageType";
 import MessageActions from "./components/MessageActions/MessageActions";
 import { deleteMessageById } from "../../../../util/message.util";
+import ProfileImage from "../../../main/ProfileImage/ProfileImage";
 const MessageContainer = styled.div`
     width:100%;
     display: flex;
@@ -19,13 +20,6 @@ const MessageContainer = styled.div`
         background-color: ${(props: { isEditing: boolean; }) => !props.isEditing ? "rgba(186, 186, 186, 0.1)" : "#fff6d6"};
     }
     background-color: ${(props: { isEditing: boolean; }) => !props.isEditing ? "transparent" : "#fff6d6"};
-`
-
-const ProfileImage = styled.img`
-    border-radius:15%;
-    margin-right: 3px;
-    height: ${(props: { isNormalMessageType: boolean; }) => props.isNormalMessageType ? "31px" : "1.125rem"};
-    width: ${(props: { isNormalMessageType: boolean; }) => props.isNormalMessageType ? "31px" : "1.125rem"};
 `
 
 const BodyContainer = styled.div`
@@ -103,7 +97,7 @@ function MessageRow(props : any) {
 
     return (
         <MessageContainer onMouseEnter={showActionsModal} onMouseLeave={hideActionsModal} isEditing={isMessageBeingEdited}>
-            <ProfileImage src={getRoomAvatar("/" + message.u.username)} isNormalMessageType={!message.t}/>
+            <ProfileImage username={message.u.username} size={message.t ? "small" : "large"} />
             {
                 message.t ? (
                     <ParseOtherMessageTypes message={message} />

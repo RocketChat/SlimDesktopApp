@@ -5,7 +5,7 @@ import { AiOutlineHome, AiOutlineSearch, AiOutlineGlobal } from 'react-icons/ai'
 import { IoCreateOutline } from 'react-icons/io5';
 import { api } from '@rocket.chat/sdk';
 import { getUsernameFromID } from "../../../util/user.util";
-
+import ProfileImage from "../../main/ProfileImage/ProfileImage";
 const Container = styled.div`
     display: flex;
     align-items: center;
@@ -29,13 +29,6 @@ const Icon = styled.div`
     cursor: pointer;
 `
 
-const ProfileImage = styled.img`
-    height:28px;
-    width:28px;
-    border-radius:15%;
-`
-
-
 function Header() {
     const [username, setUsername] = useState(null);
 
@@ -50,7 +43,7 @@ function Header() {
     return (
     <Container>
         <ImageContainer>
-            <ProfileImage src={process.env.ROCKETCHAT_URL + "avatar/" + username} />
+            <ProfileImage username={username} size={"large"} />
         </ImageContainer>
         <IconsContainer>
             <Icon><AiOutlineHome style={{color: '#FFF', fontSize:'18px'}} /></Icon>
