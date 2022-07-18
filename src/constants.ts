@@ -1,0 +1,1 @@
+export const MESSAGES_LOAD_PER_REQUEST = 6;
