@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { hot } from "react-hot-loader/root";
 import { useParams } from "react-router-dom";
 import { realTimeLoginWithAuthToken } from "../../util/login.util";
-import Header from './Header/Header';
+import Header from "./Header/Header";
 import MessageForm from "./MessageForm/MessageForm";
-import MessageList from './MessageList/MessageList';
-import { loadMessagesFromRoom, realTimeSubscribeToRoom } from '../../util/chatsWindow.util';
-import { RealtimeAPIMessage } from '../../interfaces/message';
+import MessageList from "./MessageList/MessageList";
+import { loadMessagesFromRoom, realTimeSubscribeToRoom } from "../../util/chatsWindow.util";
+import { RealtimeAPIMessage } from "../../interfaces/message";
 import styled from "styled-components"
+import { MESSAGES_LOAD_PER_REQUEST } from "../../constants";
 
 const Container = styled.div`
     height: 100%;
@@ -56,7 +57,7 @@ function ChatWindow() {
       lastMessageDate = messages[ messagesKeys[0] ].ts;
     }
 
-    let newMessages: RealtimeAPIMessage[] = await loadMessagesFromRoom(id, 5, lastMessageDate);
+    let newMessages: RealtimeAPIMessage[] = await loadMessagesFromRoom(id, MESSAGES_LOAD_PER_REQUEST, lastMessageDate);
 
     setMessages((oldMessages) => {
       let toBeMessages: MessagesMap = {};
