@@ -40,7 +40,7 @@ function List(props: any) {
     return (
         <Container column marginTop="10px" overflowScroll>
             {rooms != null ? rooms.map((room: Room) => (
-            <ChatItem key={room.id} lastMessageDate={room.lastMessageDate} id={room.id} name={room.name} lastMessage={room.lastMessage} avatarLink={room.avatarLink} />
+            <ChatItem key={room._id} lastMessageDate={room.lastMessageDate} _id={room._id} name={room.name} lastMessage={room.lastMessage} avatarLink={room.avatarLink} />
             )):null}
         </Container>
     );
