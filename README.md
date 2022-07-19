@@ -48,7 +48,7 @@ yarn start
 - [x] Real-time Subscription for messages within each window
 - [x] Retrieval of messages of each chat with pagination
 - [x] Message Parsing System (Emojis/Mentions/Markdown/Paragraphs/...etc)
-- [ ] Main Chat Window Functionalities (Send/Delete/Edit/Star/...etc) Messages
+- [x] Main Chat Window Functionalities (Send/Delete/Edit/...etc) Messages
 
 ### Screenshots
 

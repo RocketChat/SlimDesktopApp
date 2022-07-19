@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain } from "electron";
 import installExtension, {
   REACT_DEVELOPER_TOOLS,
 } from "electron-devtools-installer";
-import Room from "../interfaces/room";
+import { Room } from "../interfaces/room";
 
 declare global {
   const MAIN_WINDOW_WEBPACK_ENTRY: string;

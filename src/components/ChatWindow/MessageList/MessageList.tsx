@@ -27,15 +27,14 @@ const ShowMoreMessages = styled.div`
 function MessageList(props : any) {
 
     const messages = props.messages;
-
     return (
         <Container>
             <ShowMoreMessages onClick={props.loadMoreMessages}>
                 Show More Messages
             </ShowMoreMessages>
-            {messages ? messages.map((message: RealtimeAPIMessage) => {
+            {messages ? Object.keys(messages).map((messageId: string) => {
                 return (
-                    <MessageRow key={message._id} message={message} />
+                    <MessageRow key={messageId} message={messages[messageId]} onEditMessageAction={props.onEditMessageAction} />
                 );
             }) : null}
         </Container>

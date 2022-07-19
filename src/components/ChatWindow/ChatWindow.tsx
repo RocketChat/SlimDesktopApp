@@ -23,10 +23,14 @@ const HeaderFooterContainer = styled.div`
   height: 4rem;
 `
 
+interface MessagesMap {
+  [_id: string]: RealtimeAPIMessage
+}
 
 function ChatWindow() {
   const { id } = useParams();
-  const [messages, setMessages] = useState<RealtimeAPIMessage[]>([]);
+  const [messages, setMessages] = useState<MessagesMap>({});
+  const [messageToEdit, setMessageToEdit] = useState<RealtimeAPIMessage | null>(null);
 
 
   const loginToRoom = async () => {
@@ -49,20 +53,37 @@ function ChatWindow() {
 
   const showMessages = async () => {
     let lastMessageDate = null;
-    if(messages.length){
-      lastMessageDate = messages[0].ts;
+    let messagesKeys = Object.keys(messages);
+    if(messagesKeys.length){
+      lastMessageDate = messages[ messagesKeys[0] ].ts;
     }
 
-    let newMessages: RealtimeAPIMessage[] = await loadMessagesFromRoom(id, 10, lastMessageDate);
-    setMessages((oldMessages) => [...newMessages, ...oldMessages]);
+    let newMessages: RealtimeAPIMessage[] = await loadMessagesFromRoom(id, 5, lastMessageDate);
+
+    setMessages((oldMessages) => {
+      let toBeMessages: MessagesMap = {};
+      newMessages.map((message) => {
+        toBeMessages[message._id] = message;
+      });
+      toBeMessages = {...toBeMessages, ...oldMessages};
+      return toBeMessages;
+    });
   }
 
   const addMessage = async (message: RealtimeAPIMessage) => {
-    setMessages((oldMessages) => [...oldMessages, message]);
+    setMessages((oldMessages) => {
+      let toBeMessages = {...oldMessages};
+      toBeMessages[message._id] = message;
+      return toBeMessages;
+    });
   }
 
   const loadMoreMessages = async () => {
     showMessages();
+  }
+
+  const onEditMessageAction = (message: RealtimeAPIMessage) => {
+    setMessageToEdit(message);
   }
 
   useEffect(() => {
@@ -75,9 +96,9 @@ function ChatWindow() {
       <HeaderFooterContainer>
         <Header />
       </HeaderFooterContainer>
-      <MessageList messages={messages} loadMoreMessages={loadMoreMessages} />
+      <MessageList messages={messages} loadMoreMessages={loadMoreMessages} onEditMessageAction={onEditMessageAction} />
       <HeaderFooterContainer>
-        <MessageForm />
+        <MessageForm messageToEdit={messageToEdit} setMessageToEdit={setMessageToEdit} />
       </HeaderFooterContainer>
     </Container>
   );
