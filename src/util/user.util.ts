@@ -1,9 +1,9 @@
-import { api, driver } from '@rocket.chat/sdk';
-import { APIResult } from '../interfaces/api';
-import { UserResultAPI } from '../interfaces/user';
+import sdk from "../sdk";
+import { APIResult } from "../interfaces/api";
+import { UserResultAPI } from "../interfaces/user";
 async function getUserInfo(id: string | undefined) {
     if(!id) return undefined;
-    return await api.get('users.info', {userId:id});
+    return await sdk.get("users.info", {userId:id});
 }
 
 async function getUsernameFromID(id: string | undefined) : Promise<string|undefined> {
@@ -15,7 +15,7 @@ async function getUsernameFromID(id: string | undefined) : Promise<string|undefi
 }
 
 function getUserID(): string|undefined {
-    let userID: string|undefined = api.currentLogin?.userId || driver.userId;
+    let userID = sdk.currentLogin?.userId;
     return userID;
 }
 
