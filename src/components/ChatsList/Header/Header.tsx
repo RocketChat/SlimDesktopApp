@@ -3,8 +3,7 @@ import { hot } from "react-hot-loader/root";
 import styled from "styled-components"
 import { AiOutlineHome, AiOutlineSearch, AiOutlineGlobal } from 'react-icons/ai';
 import { IoCreateOutline } from 'react-icons/io5';
-import { api } from '@rocket.chat/sdk';
-import { getUsernameFromID } from "../../../util/user.util";
+import { getUsername } from "../../../util/user.util";
 import ProfileImage from "../../main/ProfileImage/ProfileImage";
 const Container = styled.div`
     display: flex;
@@ -32,12 +31,12 @@ const Icon = styled.div`
 function Header() {
     const [username, setUsername] = useState<string | undefined>();
 
-    const getUsername = async () => {
-        setUsername(await getUsernameFromID(api.currentLogin?.userId));
+    const getUsernameAfterLoading = async () => {
+        setUsername(getUsername());
     }
 
     useEffect(() => {
-        getUsername();
+        getUsernameAfterLoading();
     }, []);
 
     return (

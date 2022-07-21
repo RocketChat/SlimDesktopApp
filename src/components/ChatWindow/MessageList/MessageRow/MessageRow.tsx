@@ -65,7 +65,7 @@ function MessageRow(props : any) {
     }
 
     const deleteMessage = async () => {
-        await deleteMessageById(message._id);
+        await deleteMessageById(message._id, message.rid);
     }
 
     const showActionsModal = () => {

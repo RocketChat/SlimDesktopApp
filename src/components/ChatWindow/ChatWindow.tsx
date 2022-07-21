@@ -7,6 +7,7 @@ import MessageForm from "./MessageForm/MessageForm";
 import MessageList from "./MessageList/MessageList";
 import { loadMessagesFromRoom, realTimeSubscribeToRoom } from "../../util/chatsWindow.util";
 import { RealtimeAPIMessage } from "../../interfaces/message";
+import { DDPMessage } from "../../interfaces/sdk";
 import styled from "styled-components"
 import { MESSAGES_LOAD_PER_REQUEST } from "../../constants";
 
@@ -40,13 +41,14 @@ function ChatWindow() {
   }
 
 
-  const processMessages = async(err:any, message:any, messageOptions:any) => {
-    if(message.rid != id || err) return;
+  const processMessages = async(ddpMessage:DDPMessage) => {
+    const message = ddpMessage.fields.args[0];
     await addMessage(message);
   }
 
   const realTimeSubscribe = async () => {
-    await realTimeSubscribeToRoom(id, processMessages);
+    const roomId = id || "";
+    await realTimeSubscribeToRoom(roomId, processMessages);
   }
 
 
