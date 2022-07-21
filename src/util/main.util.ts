@@ -1,6 +1,6 @@
-function cleanURLFromHttp(url: string | undefined): string {
+function cleanURLFromSlash(url: string | undefined): string {
     if(!url) return "";
-    return url.replace(/^https?:\/\//, '').replace(/\/+$/, '');
+    return url.replace(/\/+$/, '');
 }
 
-export { cleanURLFromHttp }
+export { cleanURLFromSlash }
