@@ -19,4 +19,13 @@ function getUserID(): string|undefined {
     return userID;
 }
 
-export { getUserInfo, getUsernameFromID, getUserID };
+function getUsername(): string|undefined {
+    let username = sdk.currentLogin?.username;
+    return username;
+}
+
+function isUserLoggedIn(): boolean {
+    return sdk.loggedIn();
+}
+
+export { getUserInfo, getUsernameFromID, getUserID, getUsername, isUserLoggedIn };
