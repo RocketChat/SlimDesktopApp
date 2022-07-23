@@ -1,5 +1,5 @@
 import sdk from "../sdk";
-import { getUsername, getUserID } from "./user.util";
+import { getUsername } from "./user.util";
 import { Room } from "../interfaces/room";
 
 async function getListOfRooms() : Promise<Room[]> {
@@ -23,17 +23,17 @@ async function getListOfRooms() : Promise<Room[]> {
             name: room.fname || room.name,
             lastMessage: room.lastMessage,
             lastMessageDate: room.lm,
-            avatarLink: "/room/" + room._id,
+            avatarLink: "room/" + room._id,
         }
 
         if(!newRoom.name && room.usernames){
             // check if current user, return the other
             if(username == room.usernames[1]){
                 newRoom.name = room.usernames[0];
-                newRoom.avatarLink =  "/" + room.usernames[0];
+                newRoom.avatarLink = room.usernames[0];
             } else {
                 newRoom.name = room.usernames[1];
-                newRoom.avatarLink =  "/" + room.usernames[1];
+                newRoom.avatarLink = room.usernames[1];
             }
         }
 
@@ -49,4 +49,9 @@ function getRoomAvatar(avatarLink: string | undefined | null) : string {
     return process.env.ROCKETCHAT_URL + "avatar" + avatarLink;
 }
 
-export { getListOfRooms, getRoomAvatar };
+function isRoomDM(room: Room){
+    if(!room.avatarLink) return false;
+    return !room.avatarLink.startsWith("room");
+}
+
+export { getListOfRooms, getRoomAvatar, isRoomDM };
