@@ -2,7 +2,6 @@ import React, { useState, useEffect, MouseEvent } from "react";
 import { hot } from "react-hot-loader/root";
 import styled from "styled-components";
 import { RealtimeAPIMessage } from "../../../../interfaces/message";
-import { getRoomAvatar } from "../../../../util/chatsList.util";
 import MessageBodyRender from "./components/MessageBodyRender";
 import ParseOtherMessageTypes from "./components/MessageBodyRender/MessageType";
 import MessageActions from "./components/MessageActions/MessageActions";
@@ -97,7 +96,7 @@ function MessageRow(props : any) {
 
     return (
         <MessageContainer onMouseEnter={showActionsModal} onMouseLeave={hideActionsModal} isEditing={isMessageBeingEdited}>
-            <ProfileImage username={message.u.username} size={message.t ? "small" : "large"} />
+            <ProfileImage username={message.u.username} id={message.u._id} size={message.t ? "small" : "large"} />
             {
                 message.t ? (
                     <ParseOtherMessageTypes message={message} />

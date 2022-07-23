@@ -4,7 +4,8 @@ import styled from "styled-components"
 import { AiOutlineSearch, AiOutlineGlobal } from 'react-icons/ai';
 import { CgProfile } from 'react-icons/cg';
 import { useSearchParams } from "react-router-dom";
-import { getRoomAvatar } from "../../../util/chatsList.util";
+import { useParams } from "react-router-dom";
+import ProfileImage from "../../main/ProfileImage/ProfileImage";
 
 const Container = styled.div`
     width:100%;
@@ -48,11 +49,6 @@ const Icon = styled.div`
     }
 `
 
-const ProfileImage = styled.img`
-    height:31px;
-    width:31px;
-    border-radius:15%;
-`
 const RoomName = styled.div`
     flex:15;
     margin-top:5px;
@@ -68,13 +64,13 @@ const RoomName = styled.div`
 `
 
 function Header() {
+    const { id } = useParams();
     const [searchParams, setSearchParams] = useSearchParams();
-
     return (
     <Container>
         <RoomInfoContainer>
             <ImageContainer>
-                <ProfileImage src={getRoomAvatar(searchParams.get("avatar"))} />
+                <ProfileImage username={searchParams.get("avatar")} id={id} size="large" showStatus={true} />
             </ImageContainer>
             <RoomName>
                 {searchParams.get("name")}
