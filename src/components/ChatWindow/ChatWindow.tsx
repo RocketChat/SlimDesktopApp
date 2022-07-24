@@ -32,12 +32,14 @@ function ChatWindow() {
   const { id } = useParams();
   const [messages, setMessages] = useState<MessagesMap>({});
   const [messageToEdit, setMessageToEdit] = useState<RealtimeAPIMessage | null>(null);
+  const [loaded, setLoaded] = useState<boolean>(false);
 
 
   const loginToRoom = async () => {
     await realTimeLoginWithAuthToken();
     await realTimeSubscribe();
     await showMessages();
+    setLoaded(true);
   }
 
 
@@ -92,7 +94,7 @@ function ChatWindow() {
   }, []);
 
 
-  return (
+  return loaded && (
     <Container>
       <HeaderFooterContainer>
         <Header />
