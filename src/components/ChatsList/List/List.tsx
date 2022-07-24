@@ -33,9 +33,12 @@ function List(props: any) {
     let rooms: any = props.rooms;
     return (
         <Container column marginTop="10px" overflowScroll>
-            {rooms != null ? rooms.map((room: Room) => (
-            <ChatItem key={room._id} lastMessageDate={room.lastMessageDate} _id={room._id} name={room.name} lastMessage={room.lastMessage} avatarLink={room.avatarLink} />
-            )):null}
+            {rooms ? Object.keys(rooms).map((roomId: string) => {
+                const room = rooms[roomId];
+                return (
+                    <ChatItem key={roomId} lastMessageDate={room.lastMessageDate} _id={room._id} name={room.name} lastMessage={room.lastMessage} avatarLink={room.avatarLink} />
+                );
+            }) : null}
         </Container>
     );
 }
