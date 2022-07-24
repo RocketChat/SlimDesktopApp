@@ -6,7 +6,7 @@ export interface Room {
     fname?: string;
 
     lastMessage?: RealtimeAPIMessage;
-    lm?: string;
+    lm?: { $date: number };
     lastMessageDate?: string;
 
     avatarLink?: string;
