@@ -67,6 +67,7 @@
     "@rocket.chat/icons": "^0.31.14",
     "@rocket.chat/message-parser": "^0.31.14",
     "@rocket.chat/sdk": "1.0.0-alpha.42",
+    "@storybook/react": "^6.5.9",
     "assert": "^2.0.0",
     "dotenv": "^16.0.1",
     "emojione": "^4.5.0",
