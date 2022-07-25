@@ -6,18 +6,18 @@ import sdk from '../../../sdk';
 import { getUserID } from '../../../util/user.util';
 import { getUserStatusByUsername } from '../../../util/status.util';
 
-const handleStatusType = (userStatus:UserStatus)  => {
+const handleStatusTypeColor = (userStatus:UserStatus)  => {
     switch (userStatus) {
       case UserStatus.BUSY:
-        return "red";
+        return "#ff4b4b"; // Red
     case UserStatus.ONLINE:
-        return "green";
+        return "#2de0a5"; // Green
     case UserStatus.OFFLINE:
-        return "grey";
+        return "#c1c1c1"; // Light Grey
     case UserStatus.AWAY:
-        return "yellow";
+        return "#ffba65"; // Yellow
     default:
-        return "grey";
+        return "#c1c1c1";
     }
 };
 
@@ -31,7 +31,7 @@ const ProfileImageTag = styled.img`
 const Status = styled.span`
     height: 0.75rem;
     width: 0.75rem;
-    background-color: ${(props: { userStatus: UserStatus; }) => handleStatusType(props.userStatus)};
+    background-color: ${(props: { userStatus: UserStatus; }) => handleStatusTypeColor(props.userStatus)};
     background-size: contain;
     display: inline-block;
     position: relative;
@@ -42,7 +42,7 @@ const Status = styled.span`
 `
 
 const Container = styled.div`
-    height: 2rem;
+    height: ${(props: { size: string; }) => props.size == "large" ? "2rem" : "1rem"};
     width: 2.75rem;
 `
 
@@ -50,20 +50,22 @@ const Container = styled.div`
 const ProfileImage = (props: any) => {
     const [userStatus, setUserStatus] = useState<UserStatus>(UserStatus.ONLINE);
 
+    const parseOnStatusChange = async (ddpMessage: any) => {
+        const { eventName } = ddpMessage.fields;
+        if (/user-status/.test(eventName)) {
+            const userStatus = ddpMessage.fields.args[0];
+            const [id, , status] = userStatus;
+            const userID = props.id || getUserID();
+            if(userID && userID.startsWith(id)){
+                let newUserStatus: UserStatus = Number(status);
+                setUserStatus(newUserStatus);
+            }
+        }
+    }
+
     const onUserStatusChange = () => {
         if(!props.showStatus) return;
-        sdk.onStreamData("stream-notify-logged", async (ddpMessage: any) => {
-            const { eventName } = ddpMessage.fields;
-            if (/user-status/.test(eventName)) {
-                const userStatus = ddpMessage.fields.args[0];
-                const [id, , status] = userStatus;
-                const userID = props.id || getUserID();
-                if(userID && userID.startsWith(id)){
-                    let newUserStatus: UserStatus = Number(status);
-                    setUserStatus(newUserStatus);
-                }
-            }
-        });
+        sdk.onStreamData("stream-notify-logged", parseOnStatusChange);
     }
 
     const loadInitialStatus = async () => {
@@ -98,7 +100,7 @@ const ProfileImage = (props: any) => {
 
     const username = props.username;
     return (
-        <Container>
+        <Container size={props.size}>
             <ProfileImageTag src={getRoomAvatar("/" + username)} size={props.size} />
             {props.showStatus && <Status userStatus={userStatus} />}
         </Container>
