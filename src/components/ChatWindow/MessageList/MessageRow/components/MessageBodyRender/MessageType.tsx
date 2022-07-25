@@ -1,3 +1,4 @@
+import styled from "styled-components";
 import React, { FC } from 'react';
 import { RealtimeAPIMessage } from '../../../../../../interfaces/message';
 
@@ -185,7 +186,11 @@ let messageTypes = [
 ]
 
 
-
+const Content = styled.div`
+	color: #9ea2a8;
+	font-size: 13px;
+	margin-left: 4px;
+`
 
 const ParseOtherMessageTypes = (props: any) => {
     const message = props.message;
@@ -201,7 +206,7 @@ const ParseOtherMessageTypes = (props: any) => {
     }
 
     return (
-        <div style={{color: "#9ea2a8", fontSize:"13px", marginLeft:'4px'}}>{processCorrect()}</div>
+        <Content>{processCorrect()}</Content>
     );
 }
 
