@@ -1,7 +1,7 @@
 import { UserMention as ASTUserMention } from '@rocket.chat/message-parser';
 import React, { FC, memo } from 'react';
-import { api } from '@rocket.chat/sdk';
 import { useMessageBodyUserMentions, useMessageBodyMentionClick } from './contexts/MessageBodyContext';
+import { getUserID } from '../../../../../../util/user.util';
 
 const mentionStyle = {
 	color: '#b68d00',
@@ -13,7 +13,7 @@ const mentionStyle = {
 
 
 const Mention: FC<{ value: ASTUserMention['value'] }> = ({ value: { value: mention } }) => {
-	const uid = api.currentLogin?.userId;
+	const uid = getUserID();
 	const mentions = useMessageBodyUserMentions();
 	const mentioned = mentions.find((mentioned) => mentioned.username === mention);
 	const onUserMentionClick = useMessageBodyMentionClick();

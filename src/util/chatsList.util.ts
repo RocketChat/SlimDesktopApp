@@ -1,17 +1,14 @@
-import { api } from '@rocket.chat/sdk';
-import { getUsernameFromID } from './user.util';
-import { Room, RoomResultAPI } from '../interfaces/room';
+import sdk from "../sdk";
+import { getUsername, getUserID } from "./user.util";
+import { Room } from "../interfaces/room";
 
 async function getListOfRooms() : Promise<Room[]> {
-    let res:any = await api.get('rooms.get');
-    let rooms:RoomResultAPI[] = res.update;
+    let res:any = await sdk.get('rooms.get');
+    let rooms:Room[] = res.update;
 
-    let userID: string|undefined = api.currentLogin?.userId;
-    let username: string|undefined = await getUsernameFromID(userID);
-    // TODO:: Replace by | when the SDK is fixed
-    //let username: string = api.currentLogin?.username;
+    let username: string|undefined = getUsername();
 
-    rooms = rooms.filter((room: RoomResultAPI) => {
+    rooms = rooms.filter((room: Room) => {
         return room.lm != undefined
     });
 
@@ -19,10 +16,10 @@ async function getListOfRooms() : Promise<Room[]> {
         return (new Date(first.lm) < new Date(second.lm)) ? 1 : -1;
     });
 
-    let newRooms: Room[] = rooms.map((room: RoomResultAPI) => {
+    let newRooms: Room[] = rooms.map((room: Room) => {
 
         let newRoom:Room = {
-            id: room._id,
+            _id: room._id,
             name: room.fname || room.name,
             lastMessage: room.lastMessage,
             lastMessageDate: room.lm,

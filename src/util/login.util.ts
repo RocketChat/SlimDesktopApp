@@ -1,6 +1,6 @@
-import { api, driver } from '@rocket.chat/sdk';
-import { LoginResultAPI, LoginCredentials, LoginResultRealtime } from '../interfaces/login';
-import { setAuthToken, getAuthToken } from './authToken.util';
+import sdk from "../sdk";
+import { LoginResultAPI, LoginCredentials } from "../interfaces/login";
+import { setAuthToken, getAuthToken } from "./authToken.util";
 
 async function loginWithPassword(){
     const email: string = process.env.REACT_APP_EMAIL || "";
@@ -9,22 +9,20 @@ async function loginWithPassword(){
         email,
         password
     };
-    const result: LoginResultAPI = await api.login(user);
-
+    const result: LoginResultAPI = await sdk.login(user);
     if(result.status == 'success'){
         setAuthToken(result.data.authToken);
+    } else {
+        return new Error('Failed login via Email and Password');
     }
 }
 
 async function realTimeLoginWithAuthToken(){
-
-    await driver.connect({ host: "open.rocket.chat", useSsl: true});
-    const res: LoginResultRealtime = await driver.asyncCall("login", [{ "resume": getAuthToken() }]);
-
-    if(!res.id){
+    const token = getAuthToken() || "";
+    const res = await sdk.login({resume: token});
+    if(!res.token){
         return new Error('Failed login via Auth Token');
     }
-
 }
 
 

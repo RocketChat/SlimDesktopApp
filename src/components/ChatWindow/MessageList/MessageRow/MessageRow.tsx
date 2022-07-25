@@ -4,26 +4,22 @@ import styled from "styled-components";
 import { RealtimeAPIMessage } from "../../../../interfaces/message";
 import { getRoomAvatar } from "../../../../util/chatsList.util";
 import MessageBodyRender from "./components/MessageBodyRender";
+import ParseOtherMessageTypes from "./components/MessageBodyRender/MessageType";
 import MessageActions from "./components/MessageActions/MessageActions";
 import { deleteMessageById } from "../../../../util/message.util";
+import ProfileImage from "../../../main/ProfileImage/ProfileImage";
 const MessageContainer = styled.div`
     width:100%;
     display: flex;
     justify-content: normal;
     align-items: start;
-    padding: 10px 10px;
+    padding: 5px 10px;
     cursor: pointer;
     margin: 0 5px 0 5px;
     &:hover {
-        background-color:rgba(186, 186, 186, 0.1);
+        background-color: ${(props: { isEditing: boolean; }) => !props.isEditing ? "rgba(186, 186, 186, 0.1)" : "#fff6d6"};
     }
-`
-
-const ProfileImage = styled.img`
-    height:31px;
-    width:31px;
-    border-radius:15%;
-    margin-right: 3px;
+    background-color: ${(props: { isEditing: boolean; }) => !props.isEditing ? "transparent" : "#fff6d6"};
 `
 
 const BodyContainer = styled.div`
@@ -59,15 +55,17 @@ const onChannelMentionClick = (channel: string) => (e: MouseEvent<HTMLDivElement
 
 function MessageRow(props : any) {
     const [isShowActionsModal, setActionsModal] = useState(false);
+    const [isMessageBeingEdited, setIsEdited] = useState(false);
     const message: RealtimeAPIMessage = props.message;
     const messageDate = new Date(message.ts["$date"]);
 
     const editMessage = () => {
+        setIsEdited(true);
         props.onEditMessageAction(message);
     }
 
     const deleteMessage = async () => {
-        await deleteMessageById(message._id);
+        await deleteMessageById(message._id, message.rid);
     }
 
     const showActionsModal = () => {
@@ -78,33 +76,57 @@ function MessageRow(props : any) {
         setActionsModal(false);
     }
 
-    return (
-        <MessageContainer onMouseEnter={showActionsModal} onMouseLeave={hideActionsModal}>
-            <ProfileImage src={getRoomAvatar("/" + message.u.username)}/>
-            <BodyContainer>
-                <MessageInfo>
-                    <div style={{color: "#2f343d", fontWeight:"bold", fontSize:"14px"}}>{message.u.name}</div>
-                    <div style={{color: "#9ea2a8", fontSize:"13px", marginLeft:'4px'}}>{message.u.username}</div>
-                    <div style={{color: "#9ea2a8", fontSize:"12px", marginLeft:'4px'}}>{messageDate.getHours() + ":" + messageDate.getMinutes()}</div>
-                    <MessageActions
-                        onMessageDelete = {deleteMessage}
-                        onMessageEdit = {editMessage}
-                        show={isShowActionsModal}
-                    />
-                </MessageInfo>
-                <MessageBody>
-                    <MessageBodyRender
-						onUserMentionClick={onUserMentionClick}
-						onChannelMentionClick={onChannelMentionClick}
-						mentions={message?.mentions || []}
-						channels={message?.channels || []}
-						tokens={message.md || []}
-					/>
-                </MessageBody>
-            </BodyContainer>
-        </MessageContainer>
+    useEffect(() => {
+        setIsEdited(false);
+    }, [props.message]);
 
-);
+    useEffect(() => {
+        const deleteMessageToEditOnESC = (event:any) => {
+            if (event.key === 'Escape') {
+              event.preventDefault();
+              setIsEdited(false);
+              props.setMessageToEdit(null);
+            }
+        };
+
+        document.addEventListener('keydown', deleteMessageToEditOnESC);
+        return () => {
+            document.removeEventListener('keydown', deleteMessageToEditOnESC);
+        };
+    }, []);
+
+    return (
+        <MessageContainer onMouseEnter={showActionsModal} onMouseLeave={hideActionsModal} isEditing={isMessageBeingEdited}>
+            <ProfileImage username={message.u.username} size={message.t ? "small" : "large"} />
+            {
+                message.t ? (
+                    <ParseOtherMessageTypes message={message} />
+                ) : (
+                    <BodyContainer>
+                        <MessageInfo>
+                            <div style={{color: "#2f343d", fontWeight:"bold", fontSize:"14px"}}>{message.u.name}</div>
+                            <div style={{color: "#9ea2a8", fontSize:"13px", marginLeft:'4px'}}>{message.u.username}</div>
+                            <div style={{color: "#9ea2a8", fontSize:"12px", marginLeft:'4px'}}>{messageDate.getHours() + ":" + messageDate.getMinutes()}</div>
+                            <MessageActions
+                                onMessageDelete = {deleteMessage}
+                                onMessageEdit = {editMessage}
+                                show={isShowActionsModal}
+                            />
+                        </MessageInfo>
+                        <MessageBody>
+                            <MessageBodyRender
+                                onUserMentionClick={onUserMentionClick}
+                                onChannelMentionClick={onChannelMentionClick}
+                                mentions={message?.mentions || []}
+                                channels={message?.channels || []}
+                                tokens={message.md || []}
+                            />
+                        </MessageBody>
+                    </BodyContainer>
+                )
+            }
+        </MessageContainer>
+    );
 }
 
 export default hot(MessageRow);

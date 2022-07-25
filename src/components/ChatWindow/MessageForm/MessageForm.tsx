@@ -15,7 +15,7 @@ const Container = styled.div`
 
 const TextInput = styled.textarea`
     width: 100%;
-    height: 50px;
+    height: 40px;
     border: 1px solid #cbced1;
     box-shadow: 0 0 10px #cbced1;
     resize: none;
@@ -60,6 +60,8 @@ function MessageForm(props: any) {
     useEffect(() => {
         if(props.messageToEdit){
             setMessage(props.messageToEdit.msg);
+        } else {
+            setMessage("");
         }
     }, [props.messageToEdit]);
 

@@ -66,9 +66,9 @@ let currentOpenedWindows: Map<String, null | BrowserWindow>;
 const createChatWindow = (e: any, room: Room) => {
 
   // If already opened, focus on it
-  if(currentOpenedWindows.has(room.id)){
-    currentOpenedWindows.get(room.id)?.show();
-    currentOpenedWindows.get(room.id)?.focus();
+  if(currentOpenedWindows.has(room._id)){
+    currentOpenedWindows.get(room._id)?.show();
+    currentOpenedWindows.get(room._id)?.focus();
     return;
   }
 
@@ -81,14 +81,14 @@ const createChatWindow = (e: any, room: Room) => {
     },
   });
 
-  currentOpenedWindows.set(room.id, chatWindow);
+  currentOpenedWindows.set(room._id, chatWindow);
   chatWindow.loadURL(
-    MAIN_WINDOW_WEBPACK_ENTRY + "#/chat/" + room.id + `?name=${room.name}&avatar=${room.avatarLink}`
+    MAIN_WINDOW_WEBPACK_ENTRY + "#/chat/" + room._id + `?name=${room.name}&avatar=${room.avatarLink}`
   );
   chatWindow.setTitle(room.name);
 
   chatWindow.on("closed", () => {
-      currentOpenedWindows.delete(room.id);
+      currentOpenedWindows.delete(room._id);
       chatWindow = null;
   });
 };
