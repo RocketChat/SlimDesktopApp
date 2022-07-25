@@ -66,14 +66,16 @@ const RoomName = styled.div`
 function Header() {
     const { id } = useParams();
     const [searchParams, setSearchParams] = useSearchParams();
+    const username = searchParams.get("name");
+    const avatar = searchParams.get("avatar");
     return (
     <Container>
         <RoomInfoContainer>
             <ImageContainer>
-                <ProfileImage username={searchParams.get("avatar")} id={id} size="large" showStatus={true} />
+                <ProfileImage username={avatar} id={id} size="large" showStatus={!avatar?.startsWith("room")} />
             </ImageContainer>
             <RoomName>
-                {searchParams.get("name")}
+                {username}
             </RoomName>
         </RoomInfoContainer>
         <IconsContainer>
