@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { hot } from "react-hot-loader/root";
 import { useParams } from "react-router-dom";
 import { realTimeLoginWithAuthToken } from "../../util/login.util";
 import Header from "./Header/Header";
 import MessageForm from "./MessageForm/MessageForm";
 import MessageList from "./MessageList/MessageList";
-import { loadMessagesFromRoom, realTimeSubscribeToRoom } from "../../util/chatsWindow.util";
+import { loadMessagesFromRoom, realTimeSubscribeToRoom, markRoomAsRead } from "../../util/chatsWindow.util";
 import { RealtimeAPIMessage } from "../../interfaces/message";
 import { DDPMessage } from "../../interfaces/sdk";
 import styled from "styled-components"
@@ -28,8 +28,15 @@ interface MessagesMap {
   [_id: string]: RealtimeAPIMessage
 }
 
+const isInViewport = (element: HTMLElement | null, offset = 0) => {
+  if (!element) return false;
+  const top = element.getBoundingClientRect().top;
+  return (top + offset) >= 0 && (top - offset) <= window.innerHeight;
+}
+
 function ChatWindow() {
   const { id } = useParams();
+  const bottomRef = useRef<null | HTMLElement>(null);
   const [messages, setMessages] = useState<MessagesMap>({});
   const [messageToEdit, setMessageToEdit] = useState<RealtimeAPIMessage | null>(null);
   const [loaded, setLoaded] = useState<boolean>(false);
@@ -39,20 +46,30 @@ function ChatWindow() {
     await realTimeLoginWithAuthToken();
     await realTimeSubscribe();
     await showMessages();
+    await markRoomAsRead(id); // TODO:: check if window is focused
     setLoaded(true);
   }
 
 
+
+
   const processMessages = async(ddpMessage:DDPMessage) => {
     const message = ddpMessage.fields.args[0];
+
+    let scroll: boolean = false;
+    // Check if user is already at down of page then scroll to show message
+    if(isInViewport(bottomRef.current)){
+      scroll = true;
+    }
+
     await addMessage(message);
+    if(scroll) bottomRef.current?.scrollIntoView({behavior: 'smooth'});
+    await markRoomAsRead(id);
   }
 
   const realTimeSubscribe = async () => {
-    const roomId = id || "";
-    await realTimeSubscribeToRoom(roomId, processMessages);
+    await realTimeSubscribeToRoom(id || "", processMessages);
   }
-
 
   const showMessages = async () => {
     let lastMessageDate = null;
@@ -61,7 +78,8 @@ function ChatWindow() {
       lastMessageDate = messages[ messagesKeys[0] ].ts;
     }
 
-    let newMessages: RealtimeAPIMessage[] = await loadMessagesFromRoom(id, MESSAGES_LOAD_PER_REQUEST, lastMessageDate);
+    const newMessagesResponse: {messages: RealtimeAPIMessage[], unreadNotLoaded: number} = await loadMessagesFromRoom(id, MESSAGES_LOAD_PER_REQUEST, lastMessageDate);
+    const newMessages = newMessagesResponse.messages;
 
     setMessages((oldMessages) => {
       let toBeMessages: MessagesMap = {};
@@ -99,7 +117,12 @@ function ChatWindow() {
       <HeaderFooterContainer>
         <Header />
       </HeaderFooterContainer>
-      <MessageList messages={messages} loadMoreMessages={loadMoreMessages} onEditMessageAction={onEditMessageAction} setMessageToEdit={setMessageToEdit} />
+      <MessageList messages={messages}
+        loadMoreMessages={loadMoreMessages}
+        onEditMessageAction={onEditMessageAction}
+        setMessageToEdit={setMessageToEdit}
+      />
+      <div ref={bottomRef} />
       <HeaderFooterContainer>
         <MessageForm messageToEdit={messageToEdit} setMessageToEdit={setMessageToEdit} />
       </HeaderFooterContainer>
