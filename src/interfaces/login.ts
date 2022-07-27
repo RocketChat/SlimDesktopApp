@@ -4,11 +4,12 @@ export interface LoginCredentials {
 }
 
 export interface LoginResultAPI {
-    status: string;
-    data: {
-        authToken: string;
-        userId: string;
-    };
+    id: string;
+    token: string
+    type: string;
+    tokenExpires: {
+        $date: number
+    }
 }
 
 export interface LoginResultRealtime {

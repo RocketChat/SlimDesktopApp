@@ -10,8 +10,8 @@ async function loginWithPassword(){
         password
     };
     const result: LoginResultAPI = await sdk.login(user);
-    if(result.status == 'success'){
-        setAuthToken(result.data.authToken);
+    if(result.token){
+        setAuthToken(result.token);
     } else {
         return new Error('Failed login via Email and Password');
     }
