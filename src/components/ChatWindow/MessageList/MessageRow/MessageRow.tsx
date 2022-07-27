@@ -2,7 +2,6 @@ import React, { useState, useEffect, MouseEvent } from "react";
 import { hot } from "react-hot-loader/root";
 import styled from "styled-components";
 import { RealtimeAPIMessage } from "../../../../interfaces/message";
-import { getRoomAvatar } from "../../../../util/chatsList.util";
 import MessageBodyRender from "./components/MessageBodyRender";
 import ParseOtherMessageTypes from "./components/MessageBodyRender/MessageType";
 import MessageActions from "./components/MessageActions/MessageActions";
@@ -90,14 +89,18 @@ function MessageRow(props : any) {
         };
 
         document.addEventListener('keydown', deleteMessageToEditOnESC);
-        return () => {
-            document.removeEventListener('keydown', deleteMessageToEditOnESC);
-        };
+        return () => document.removeEventListener('keydown', deleteMessageToEditOnESC);
     }, []);
 
+    const messageTime = messageDate.getHours() + ":" + messageDate.getMinutes();
     return (
         <MessageContainer onMouseEnter={showActionsModal} onMouseLeave={hideActionsModal} isEditing={isMessageBeingEdited}>
-            <ProfileImage username={message.u.username} size={message.t ? "small" : "large"} />
+            <ProfileImage
+                username={message.u.username}
+                id={message.u._id}
+                // if other message type (User joined, ...etc), small profile avatar
+                size={message.t ? "small" : "large"}
+            />
             {
                 message.t ? (
                     <ParseOtherMessageTypes message={message} />
@@ -106,7 +109,7 @@ function MessageRow(props : any) {
                         <MessageInfo>
                             <div style={{color: "#2f343d", fontWeight:"bold", fontSize:"14px"}}>{message.u.name}</div>
                             <div style={{color: "#9ea2a8", fontSize:"13px", marginLeft:'4px'}}>{message.u.username}</div>
-                            <div style={{color: "#9ea2a8", fontSize:"12px", marginLeft:'4px'}}>{messageDate.getHours() + ":" + messageDate.getMinutes()}</div>
+                            <div style={{color: "#9ea2a8", fontSize:"12px", marginLeft:'4px'}}>{messageTime}</div>
                             <MessageActions
                                 onMessageDelete = {deleteMessage}
                                 onMessageEdit = {editMessage}

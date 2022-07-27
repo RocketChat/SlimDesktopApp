@@ -1,7 +1,7 @@
 import { User } from './user';
 import { Room } from './room';
 import { parse } from '@rocket.chat/message-parser';
-export type ChannelMention = Pick<Room, 'id' | 'name'>;
+export type ChannelMention = Pick<Room, '_id' | 'name'>;
 export type UserMention = Pick<User, '_id' | 'name' | 'username'>;
 type MentionType = "user" | "team";
 

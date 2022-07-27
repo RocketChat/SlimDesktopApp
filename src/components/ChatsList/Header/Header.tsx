@@ -3,7 +3,7 @@ import { hot } from "react-hot-loader/root";
 import styled from "styled-components"
 import { AiOutlineHome, AiOutlineSearch, AiOutlineGlobal } from 'react-icons/ai';
 import { IoCreateOutline } from 'react-icons/io5';
-import { getUsername } from "../../../util/user.util";
+import { getUsername, getUserID } from "../../../util/user.util";
 import ProfileImage from "../../main/ProfileImage/ProfileImage";
 const Container = styled.div`
     display: flex;
@@ -30,19 +30,21 @@ const Icon = styled.div`
 
 function Header() {
     const [username, setUsername] = useState<string | undefined>();
+    const [ID, setUserID] = useState<string | undefined>();
 
-    const getUsernameAfterLoading = async () => {
+    const getUserInfoAfterLoading = async () => {
         setUsername(getUsername());
+        setUserID(getUserID());
     }
 
     useEffect(() => {
-        getUsernameAfterLoading();
+        getUserInfoAfterLoading();
     }, []);
 
     return (
     <Container>
         <ImageContainer>
-            <ProfileImage username={username} size={"large"} />
+            <ProfileImage username={username} id={ID} size={"large"} showStatus={true} />
         </ImageContainer>
         <IconsContainer>
             <Icon><AiOutlineHome style={{color: '#FFF', fontSize:'18px'}} /></Icon>
