@@ -49,6 +49,8 @@ yarn start
 - [x] Retrieval of messages of each chat with pagination
 - [x] Message Parsing System (Emojis/Mentions/Markdown/Paragraphs/...etc)
 - [x] Main Chat Window Functionalities (Send/Delete/Edit/...etc) Messages
+- [x] User Status Feature
+- [x] Chat Window Attachments (Images/Videos/Audios/Quotes)
 
 ### Screenshots
 
