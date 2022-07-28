@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain } from "electron";
 import installExtension, {
   REACT_DEVELOPER_TOOLS,
 } from "electron-devtools-installer";
+import electron from "electron";
 import { Room } from "../interfaces/room";
 
 declare global {
@@ -79,6 +80,12 @@ const createChatWindow = (e: any, room: Room) => {
       nodeIntegration: true,
       contextIsolation: false,
     },
+  });
+
+  // To make any link clicked on pop-up in the default browser
+  chatWindow.webContents.on('new-window', function(e, url) {
+    e.preventDefault();
+    electron.shell.openExternal(url);
   });
 
   currentOpenedWindows.set(room._id, chatWindow);
