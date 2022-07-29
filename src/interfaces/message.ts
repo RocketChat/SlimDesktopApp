@@ -1,9 +1,12 @@
 import { User } from './user';
 import { Room } from './room';
 import { parse } from '@rocket.chat/message-parser';
+import { FileProp, MessageAttachmentAction, MessageAttachmentDefault, FileAttachmentProps, MessageQuoteAttachment } from "../components/ChatWindow/MessageList/MessageRow/components/Attachments/types";
+
 export type ChannelMention = Pick<Room, '_id' | 'name'>;
 export type UserMention = Pick<User, '_id' | 'name' | 'username'>;
 type MentionType = "user" | "team";
+type MessageAttachment = MessageAttachmentAction | MessageAttachmentDefault | FileAttachmentProps | MessageQuoteAttachment;
 
 export interface RealtimeAPIMessage {
     _id: string;
@@ -20,4 +23,6 @@ export interface RealtimeAPIMessage {
     md?: ReturnType<typeof parse>;
     role?: string;
     t?: string;
+    attachments?: MessageAttachment[];
+    file?: FileProp
 }

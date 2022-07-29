@@ -7,6 +7,7 @@ const Container = styled.div`
     position: absolute;
     right: 10px;
     cursor: pointer;
+    z-index: 100;
 `
 
 const ActionsModal = styled.div`

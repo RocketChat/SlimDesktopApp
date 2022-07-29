@@ -18,6 +18,7 @@ const Container = styled.div`
     height:2.5rem;
     overflow: hidden;
     background-color: #FFF;
+    z-index: 1000;
 `
 
 const ImageContainer = styled.div`

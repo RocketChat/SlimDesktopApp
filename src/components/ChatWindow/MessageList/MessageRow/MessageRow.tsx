@@ -3,10 +3,12 @@ import { hot } from "react-hot-loader/root";
 import styled from "styled-components";
 import { RealtimeAPIMessage } from "../../../../interfaces/message";
 import MessageBodyRender from "./components/MessageBodyRender";
+import Attachments from "./components/Attachments";
 import ParseOtherMessageTypes from "./components/MessageBodyRender/MessageType";
 import MessageActions from "./components/MessageActions/MessageActions";
 import { deleteMessageById } from "../../../../util/message.util";
 import ProfileImage from "../../../main/ProfileImage/ProfileImage";
+
 const MessageContainer = styled.div`
     width:100%;
     display: flex;
@@ -125,6 +127,7 @@ function MessageRow(props : any) {
                                 tokens={message.md || []}
                             />
                         </MessageBody>
+                        {message.attachments && <Attachments attachments={message.attachments} file={message.file} />}
                     </BodyContainer>
                 )
             }

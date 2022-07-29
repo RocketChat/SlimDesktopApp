@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { hot } from "react-hot-loader/root";
-import { loginWithPassword } from "../../util/login.util";
+import { loginWithPassword, realTimeLoginWithAuthToken } from "../../util/login.util";
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
@@ -8,16 +8,19 @@ function Login() {
     let navigate = useNavigate();
 
     const loginHere = async () => {
-        await loginWithPassword();
+        try {
+            await realTimeLoginWithAuthToken();
+        } catch(err) {
+            await loginWithPassword();
+        }
         await navigate('/list');
     }
 
-    return (
-        <div>
-        <h3>Rocket.Chat Standalone Desktop Application</h3>
-        <button onClick={loginHere}>Login Here</button>
-        </div>
-    );
+    useEffect(() => {
+        loginHere();
+    }, []);
+
+    return null;
 }
 
 export default hot(Login);
