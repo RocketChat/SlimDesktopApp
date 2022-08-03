@@ -16,7 +16,7 @@ const Container = styled.div`
     border-bottom:1px solid #eeeff1;
     padding:8px 0px 8px 15px;
     height:2.5rem;
-    overflow: hidden;
+    overflow-x: hidden;
     background-color: #FFF;
     z-index: 1000;
 `
@@ -60,7 +60,7 @@ const RoomName = styled.div`
     font-weight: 700;
     letter-spacing: 0rem;
     line-height: 1.5rem;
-    overflow: hidden;
+    overflow-x: hidden;
     margin-inline: 0.25rem;
 `
 
