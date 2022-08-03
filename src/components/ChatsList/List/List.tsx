@@ -14,7 +14,8 @@ const Container = styled.div`
     margin-top:${(props: { marginTop: any; }) => props.marginTop ? props.marginTop : 0};
     width:100%;
     overflow-y: ${(props: { overflowScroll: any; }) => props.overflowScroll ? 'scroll' : 'hidden'};
-    height: 100%;
+    overflow-x: hidden;
+    height: 80%;
 `
 
 const ChatItemContainer = styled.div`
