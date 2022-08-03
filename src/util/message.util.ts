@@ -1,14 +1,14 @@
 import sdk from "../sdk";
 import { RealtimeAPIMessage } from "../interfaces/message";
 
-async function sendTextMessage(roomId: string | undefined, messageText: string) : Promise<boolean> {
+async function sendTextMessage(roomId: string | undefined, messageText: string, threadId: string | null = null) : Promise<boolean> {
     if(!roomId) throw new Error('Room ID Not Found!');
-    let res: any = await sdk.post("chat.sendMessage", {
-        message:{
-            rid: roomId,
-            msg: messageText
-        }
-    });
+    let message : {rid: string, msg: string, tmid?: string} = {
+        rid: roomId,
+        msg: messageText,
+    }
+    if(threadId) message.tmid = threadId;
+    let res: any = await sdk.post("chat.sendMessage", {message});
     return res.success ? true : false;
 }
 
