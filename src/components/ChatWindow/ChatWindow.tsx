@@ -5,19 +5,19 @@ import { realTimeLoginWithAuthToken } from "../../util/login.util";
 import Header from "./Header/Header";
 import MessageForm from "./MessageForm/MessageForm";
 import MessageList from "./MessageList/MessageList";
-import { loadMessagesFromRoom, realTimeSubscribeToRoom, markRoomAsRead } from "../../util/chatsWindow.util";
+import { loadMessagesFromRoom, realTimeSubscribeToRoom, markRoomAsRead, loadMessagesFromThread } from "../../util/chatsWindow.util";
 import { RealtimeAPIMessage } from "../../interfaces/message";
 import { DDPMessage } from "../../interfaces/sdk";
 import styled from "styled-components"
 import { MESSAGES_LOAD_PER_REQUEST } from "../../constants";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
     height: 100%;
     width: 100%;
     display: flex;
     flex-direction: column;
-    position: relative;
-    overflow: hidden;
+    overflow: unset;
 `
 
 const HeaderFooterContainer = styled.div`
@@ -28,19 +28,30 @@ interface MessagesMap {
   [_id: string]: RealtimeAPIMessage
 }
 
+/**
+ * @returns if element is in the view of user
+ */
 const isInViewport = (element: HTMLElement | null, offset = 0) => {
   if (!element) return false;
   const top = element.getBoundingClientRect().top;
   return (top + offset) >= 0 && (top - offset) <= window.innerHeight;
 }
 
-function ChatWindow() {
-  const { id } = useParams();
+/**
+ *
+ * @param props.isThread returns true if view should be thread
+ * @returns Either Complete Chat Window (Like Channel) or Thread View
+ */
+
+function ChatWindow(props: {isThread: boolean}) {
+  const id = useParams().id;
   const bottomRef = useRef<null | HTMLElement>(null);
   const [messages, setMessages] = useState<MessagesMap>({});
   const [messageToEdit, setMessageToEdit] = useState<RealtimeAPIMessage | null>(null);
   const [loaded, setLoaded] = useState<boolean>(false);
 
+  const thread = useSelector((state: any) => state.thread);
+  const tmid = thread.tmid;
 
   const loginToRoom = async () => {
     await realTimeLoginWithAuthToken();
@@ -50,12 +61,15 @@ function ChatWindow() {
     setLoaded(true);
   }
 
-
-
+  const loginToThread = async () => {
+    await realTimeSubscribe();
+    await showMessages();
+    setLoaded(true);
+  }
 
   const processMessages = async(ddpMessage:DDPMessage) => {
-    const message = ddpMessage.fields.args[0];
-
+    const message: RealtimeAPIMessage = ddpMessage.fields.args[0];
+    if(message.tmid && !props.isThread || message.tmid != tmid) return;
     let scroll: boolean = false;
     // Check if user is already at down of page then scroll to show message
     if(isInViewport(bottomRef.current)){
@@ -64,7 +78,7 @@ function ChatWindow() {
 
     await addMessage(message);
     if(scroll) bottomRef.current?.scrollIntoView({behavior: 'smooth'});
-    await markRoomAsRead(id);
+    if(props.isThread) await markRoomAsRead(id);
   }
 
   const realTimeSubscribe = async () => {
@@ -78,8 +92,14 @@ function ChatWindow() {
       lastMessageDate = messages[ messagesKeys[0] ].ts;
     }
 
-    const newMessagesResponse: {messages: RealtimeAPIMessage[], unreadNotLoaded: number} = await loadMessagesFromRoom(id, MESSAGES_LOAD_PER_REQUEST, lastMessageDate);
-    const newMessages = newMessagesResponse.messages;
+    let newMessages: RealtimeAPIMessage[];
+
+    if(props.isThread){
+      newMessages = await loadMessagesFromThread(tmid);
+    } else {
+      const newMessagesResponse: {messages: RealtimeAPIMessage[]} = await loadMessagesFromRoom(id, MESSAGES_LOAD_PER_REQUEST, lastMessageDate);
+      newMessages = newMessagesResponse.messages;
+    }
 
     setMessages((oldMessages) => {
       let toBeMessages: MessagesMap = {};
@@ -108,26 +128,27 @@ function ChatWindow() {
   }
 
   useEffect(() => {
-    loginToRoom();
+    if(!props.isThread) loginToRoom();
+    else loginToThread();
   }, []);
 
-
-  return loaded && (
-    <Container>
-      <HeaderFooterContainer>
+  return loaded ? (
+    <Container >
+      {!props.isThread && <HeaderFooterContainer>
         <Header />
-      </HeaderFooterContainer>
+      </HeaderFooterContainer>}
       <MessageList messages={messages}
         loadMoreMessages={loadMoreMessages}
         onEditMessageAction={onEditMessageAction}
         setMessageToEdit={setMessageToEdit}
+        isThread={props.isThread && tmid}
       />
       <div ref={bottomRef} />
       <HeaderFooterContainer>
-        <MessageForm messageToEdit={messageToEdit} setMessageToEdit={setMessageToEdit} />
+        <MessageForm messageToEdit={messageToEdit} setMessageToEdit={setMessageToEdit} isThread={props.isThread && tmid} />
       </HeaderFooterContainer>
     </Container>
-  );
+  ) : null;
 }
 
 export default hot(ChatWindow);
