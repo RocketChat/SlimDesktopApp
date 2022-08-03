@@ -4,6 +4,7 @@ import styled from "styled-components"
 import { sendTextMessage, editTextMessage } from "../../../util/message.util";
 import { useParams } from "react-router-dom";
 import { RealtimeAPIMessage } from '../../../interfaces/message';
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
     position: fixed;
@@ -31,6 +32,8 @@ const TextInput = styled.textarea`
 function MessageForm(props: any) {
     const { id: roomId } = useParams();
     const [message, setMessage] = useState("");
+    const thread = useSelector((state: any) => state.thread);
+    const tmid = thread.tmid;
 
     const onMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setMessage(e.target.value);
@@ -48,7 +51,8 @@ function MessageForm(props: any) {
     const sendMessage = async () => {
         // Send New Message
         if(!props.messageToEdit){
-            return await sendTextMessage(roomId, message);
+            const threadId = props.isThread ? tmid : null;
+            return await sendTextMessage(roomId, message, threadId);
         }
 
         // Edit Existing Message
