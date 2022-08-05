@@ -24,5 +24,9 @@ export interface RealtimeAPIMessage {
     role?: string;
     t?: string;
     attachments?: MessageAttachment[];
-    file?: FileProp
+    file?: FileProp;
+	tmid?: string;
+	tcount?: number | null;
+	tlm?: any;
+	replies?: string[];
 }

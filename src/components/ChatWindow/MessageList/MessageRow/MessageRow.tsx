@@ -8,10 +8,12 @@ import ParseOtherMessageTypes from "./components/MessageBodyRender/MessageType";
 import MessageActions from "./components/MessageActions/MessageActions";
 import { deleteMessageById } from "../../../../util/message.util";
 import ProfileImage from "../../../main/ProfileImage/ProfileImage";
+import MessageThread from "./components/Threads/Threads";
 
 const MessageContainer = styled.div`
     width:100%;
     display: flex;
+    flex-direction: row;
     justify-content: normal;
     align-items: start;
     padding: 5px 10px;
@@ -21,6 +23,9 @@ const MessageContainer = styled.div`
         background-color: ${(props: { isEditing: boolean; }) => !props.isEditing ? "rgba(186, 186, 186, 0.1)" : "#fff6d6"};
     }
     background-color: ${(props: { isEditing: boolean; }) => !props.isEditing ? "transparent" : "#fff6d6"};
+    &:nth-child(3) {
+        margin-top: 15px;
+    }
 `
 
 const BodyContainer = styled.div`
@@ -115,6 +120,7 @@ function MessageRow(props : any) {
                             <MessageActions
                                 onMessageDelete = {deleteMessage}
                                 onMessageEdit = {editMessage}
+                                id = {message._id}
                                 show={isShowActionsModal}
                             />
                         </MessageInfo>
@@ -128,6 +134,7 @@ function MessageRow(props : any) {
                             />
                         </MessageBody>
                         {message.attachments && <Attachments attachments={message.attachments} file={message.file} />}
+                        {message.tcount &&  <MessageThread message={message} />}
                     </BodyContainer>
                 )
             }

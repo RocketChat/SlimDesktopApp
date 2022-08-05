@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { hot } from "react-hot-loader/root";
 import styled from "styled-components";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { useDispatch } from "react-redux";
+import { openThread } from "../../../../../../state/actions";
 
 const Container = styled.div`
     position: absolute;
@@ -33,6 +35,7 @@ const ActionsLi = styled.li`
 
 function MessageActions(props : any) {
     const [isModalOpen, setModal] = useState(false);
+    const dispatch = useDispatch();
 
     const toggleActionsModal = () => {
         setModal(!isModalOpen);
@@ -48,6 +51,10 @@ function MessageActions(props : any) {
         toggleActionsModal();
     }
 
+    const onReplyInThread = () => {
+        dispatch(openThread(props.id));
+    }
+
 
     return props.show && (
         <Container>
@@ -59,6 +66,7 @@ function MessageActions(props : any) {
                     <ActionsUl style={{listStyleType:"none"}}>
                         <ActionsLi onClick={onMessageEdit}>Edit Message</ActionsLi>
                         <ActionsLi onClick={onMessageDelete}>Delete Message</ActionsLi>
+                        <ActionsLi onClick={onReplyInThread}>Reply In Thread</ActionsLi>
                     </ActionsUl>
                 </ActionsModal>
             ): null}

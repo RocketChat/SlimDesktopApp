@@ -8,11 +8,7 @@ function Login() {
     let navigate = useNavigate();
 
     const loginHere = async () => {
-        try {
-            await realTimeLoginWithAuthToken();
-        } catch(err) {
-            await loginWithPassword();
-        }
+        await loginWithPassword();
         await navigate('/list');
     }
 
