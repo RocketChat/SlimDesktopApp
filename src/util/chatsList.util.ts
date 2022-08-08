@@ -1,4 +1,4 @@
-import sdk from "../sdk";
+import RocketChat from "../sdk";
 import { getUserID, getUsername } from "./user.util";
 import { Room } from "../interfaces/room";
 
@@ -27,7 +27,7 @@ const getRoomInfo = (room: Room): Room => {
 }
 
 async function getListOfRooms() : Promise<Room[]> {
-    let res:any = await sdk.get('rooms.get');
+    let res:any = await RocketChat.sdk.get('rooms.get');
     let rooms:Room[] = res.update;
 
     rooms = rooms.filter((room: Room) => {
@@ -57,11 +57,11 @@ function isRoomDM(room: Room){
 }
 
 async function subscribeToRooms() {
-    return await sdk.subscribe("stream-notify-user", getUserID() + "/rooms-changed");
+    return await RocketChat.sdk.subscribe("stream-notify-user", getUserID() + "/rooms-changed");
 }
 
 function onRoomsChange(callback: any){
-    sdk.onStreamData("stream-notify-user", (ddpMessage: any) => {
+    RocketChat.sdk.onStreamData("stream-notify-user", (ddpMessage: any) => {
         if(ddpMessage.fields.eventName == getUserID() + "/rooms-changed"){
             callback(ddpMessage);
         }

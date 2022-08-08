@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from "styled-components";
 import { getRoomAvatar } from "../../../util/chatsList.util";
 import { UserStatus } from "../../../interfaces/user";
-import sdk from '../../../sdk';
+import RocketChat from '../../../sdk';
 import { getUserID } from '../../../util/user.util';
 import { getUserStatusByUsername } from '../../../util/status.util';
 
@@ -65,7 +65,7 @@ const ProfileImage = (props: any) => {
 
     const onUserStatusChange = () => {
         if(!props.showStatus) return;
-        sdk.onStreamData("stream-notify-logged", parseOnStatusChange);
+        RocketChat.sdk.onStreamData("stream-notify-logged", parseOnStatusChange);
     }
 
     const loadInitialStatus = async () => {

@@ -1,16 +1,16 @@
-import sdk from "../sdk";
+import RocketChat from "../sdk";
 import { Subscription } from "../interfaces/subscription";
 
 function registerUserStatusChangeSubscription(){
-    sdk.subscribe("stream-notify-logged", "user-status");
+    RocketChat.sdk.subscribe("stream-notify-logged", "user-status");
 }
 
 function unRegisterUserStatusChange(subscription: Subscription) {
-    sdk.unsubscribe(subscription);
+    RocketChat.sdk.unsubscribe(subscription);
 }
 
 async function getUserStatusByUsername(username: string){
-    const res = await sdk.get("users.getStatus", {
+    const res = await RocketChat.sdk.get("users.getStatus", {
         username
     });
     return res;
