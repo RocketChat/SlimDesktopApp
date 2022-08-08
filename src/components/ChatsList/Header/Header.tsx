@@ -5,6 +5,7 @@ import { AiOutlineHome, AiOutlineSearch, AiOutlineGlobal } from 'react-icons/ai'
 import { IoCreateOutline } from 'react-icons/io5';
 import { getUsername, getUserID } from "../../../util/user.util";
 import ProfileImage from "../../main/ProfileImage/ProfileImage";
+import UserDropdown from "./UserDropdown/UserDropdown";
 const Container = styled.div`
     display: flex;
     align-items: center;
@@ -15,6 +16,7 @@ const Container = styled.div`
 
 const ImageContainer = styled.div`
     flex:9;
+    cursor: pointer;
 `
 const IconsContainer = styled.div`
     flex:5;
@@ -31,10 +33,15 @@ const Icon = styled.div`
 function Header() {
     const [username, setUsername] = useState<string | undefined>();
     const [ID, setUserID] = useState<string | undefined>();
+    const [dropDownShow, setDropDownShow] = useState<boolean>(false);
 
     const getUserInfoAfterLoading = async () => {
         setUsername(getUsername());
         setUserID(getUserID());
+    }
+
+    const toggleDropdown = () => {
+        setDropDownShow(!dropDownShow);
     }
 
     useEffect(() => {
@@ -43,8 +50,9 @@ function Header() {
 
     return (
     <Container>
-        <ImageContainer>
+        <ImageContainer onClick={toggleDropdown}>
             <ProfileImage username={username} id={ID} size={"large"} showStatus={true} />
+            {dropDownShow && <UserDropdown />}
         </ImageContainer>
         <IconsContainer>
             <Icon><AiOutlineHome style={{color: '#FFF', fontSize:'18px'}} /></Icon>
