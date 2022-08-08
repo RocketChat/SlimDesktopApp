@@ -28,6 +28,7 @@ let mainWindow: null | BrowserWindow;
 const createWindow = () => {
 
   ipcMain.on("create-window-chat", createChatWindow);
+  ipcMain.on("close-all-window-chat", closeAllWindowChats);
 
   mainWindow = new BrowserWindow({
     width: 500,
@@ -99,3 +100,9 @@ const createChatWindow = (e: any, room: Room) => {
       chatWindow = null;
   });
 };
+
+const closeAllWindowChats = () => {
+  currentOpenedWindows.forEach((window) => {
+    window?.close();
+  });
+}
