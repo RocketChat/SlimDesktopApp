@@ -19,30 +19,13 @@ cd SlimDesktopApp
 ```sh
 yarn
 ```
-
-4. Create the environment variables `.env` file
-Till this moment, Only a code-fixed login is present i.e.(No UI for login is present), since we are working on getting the functionality of the main application (Chatting) working first.
-That's why It will be needed to provide the login parameters manually in the `.env` file.
-
-The parameters are
-- `ROCKETCHAT_URL` : The Rocket.Chat server URL you will be coonnecting to e.g. (`https://open.rocket.chat/`).
-- `REACT_APP_EMAIL` : Your Email Address on the Rocket.Chat server e.g. (`user@gmail.com`)
-- `REACT_APP_PASSWORD` : Your Password on the Rocket.Chat server e.g. (`password_1234`)
-
-For Example:
-```sh
-ROCKETCHAT_URL = https://open.rocket.chat/
-REACT_APP_EMAIL = user@test.com
-REACT_APP_PASSWORD = password_1234
-```
-
-5. Run the application
+4. Run the application
 ```sh
 yarn start
 ```
 
 ### What's Done till now
-- [x] Code-Fixed Authentication System
+- [x] Authentication System with UI
 - [x] All Channels List within a single window
 - [x] Pop-up a new window for each chat which clicked over
 - [x] Real-time Subscription for messages within each window
@@ -55,9 +38,9 @@ yarn start
 
 ### Screenshots
 
-- Code-fixed Login
+- Login UI
 
-![image](https://user-images.githubusercontent.com/34144004/178370003-55790350-1b11-44dd-b20e-cebfa7291efa.png)
+![image](https://user-images.githubusercontent.com/34144004/183989453-0ba19252-82fd-4a66-b3ed-026125dd2094.png)
 
 - Chats/Channels Window
 
