@@ -1,6 +1,7 @@
 import RocketChat from "../sdk";
 import { LoginResultAPI, LoginCredentials } from "../interfaces/login";
 import { setAuthToken, getAuthToken, removeAuthToken } from "./authToken.util";
+import { getCurrentServer } from "./server.util";
 const { ipcRenderer } = window.require("electron");
 
 function connect(host: string, useSSL: boolean){
@@ -30,7 +31,7 @@ async function loginWithPassword(host: string, {user, password}: LoginCredential
 }
 
 async function realTimeLoginWithAuthToken(){
-    const host = process.env.ROCKETCHAT_URL || "";
+    const host = getCurrentServer();
     connect(host, true);
 
     const token = getAuthToken() || "";
