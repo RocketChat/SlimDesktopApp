@@ -1,6 +1,7 @@
 import RocketChat from "../sdk";
 import { getUserID, getUsername } from "./user.util";
 import { Room } from "../interfaces/room";
+import { getCurrentServer } from "./server.util";
 
 const getRoomInfo = (room: Room): Room => {
     let newRoom:Room = {
@@ -48,7 +49,7 @@ async function getListOfRooms() : Promise<Room[]> {
 }
 
 function getRoomAvatar(avatarLink: string | undefined | null) : string {
-    return process.env.ROCKETCHAT_URL + "avatar" + avatarLink;
+    return getCurrentServer() + "/avatar" + avatarLink;
 }
 
 function isRoomDM(room: Room){
