@@ -53,7 +53,7 @@ function ChatItem(props: Room) {
     }
 
     return (
-        <ChatItemContainer onDoubleClick={openChatWindow}>
+        <ChatItemContainer onClick={openChatWindow}>
             <div style={{flex: 1}}>
                 <ProfileImage username={props.avatarLink} id={props._id} size="large" showStatus={isRoomDM(props)}  />
             </div>
