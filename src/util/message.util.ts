@@ -1,4 +1,4 @@
-import sdk from "../sdk";
+import RocketChat from "../sdk";
 import { RealtimeAPIMessage } from "../interfaces/message";
 
 async function sendTextMessage(roomId: string | undefined, messageText: string, threadId: string | null = null) : Promise<boolean> {
@@ -8,12 +8,12 @@ async function sendTextMessage(roomId: string | undefined, messageText: string, 
         msg: messageText,
     }
     if(threadId) message.tmid = threadId;
-    let res: any = await sdk.post("chat.sendMessage", {message});
+    let res: any = await RocketChat.sdk.post("chat.sendMessage", {message});
     return res.success ? true : false;
 }
 
 async function deleteMessageById(messageId: string, roomId: string) {
-    await sdk.post("chat.delete", {
+    await RocketChat.sdk.post("chat.delete", {
         msgId: messageId,
         roomId
     });
@@ -21,7 +21,7 @@ async function deleteMessageById(messageId: string, roomId: string) {
 
 async function editTextMessage(message: RealtimeAPIMessage, newMessageText: string) : Promise<boolean> {
     let newMessage: RealtimeAPIMessage = message;
-    await sdk.post("chat.update", {
+    await RocketChat.sdk.post("chat.update", {
         roomId: newMessage.rid,
         msgId: newMessage._id,
         text: newMessageText

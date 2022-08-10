@@ -1,15 +1,29 @@
-import { Rocketchat } from '@rocket.chat/sdk';
+import { Rocketchat } from "@rocket.chat/sdk";
 import { cleanURLFromSlash } from "../util/main.util";
-import { setCurrentServer } from "../util/server.util";
+import { getCurrentServer, setCurrentServer } from "../util/server.util";
 
-if(!process.env.ROCKETCHAT_URL) window.location.reload();
+class RocketChatSDK {
 
-const host = cleanURLFromSlash(process.env.ROCKETCHAT_URL);
-const useSsl = (process.env.ROCKETCHAT_USE_SSL)
-? ((process.env.ROCKETCHAT_USE_SSL || '').toString().toLowerCase() === 'true')
-: ((host || '').toString().toLowerCase().startsWith('https'));
+    static currentSdk: Rocketchat;
 
-setCurrentServer(host);
-const sdk = new Rocketchat({ host, protocol: 'ddp', useSsl, reopen: 20000 });
+    static initialize(host: string, useSsl: boolean){
+        host = cleanURLFromSlash(host);
+        try {
+            const sdkInstance = new Rocketchat({ host, protocol: 'ddp', useSsl, reopen: 20000 });
+            setCurrentServer(host);
+            RocketChatSDK.currentSdk = sdkInstance;
+            return RocketChatSDK.currentSdk;
+        } catch(err){
+            throw Error('Wrong host or SSL');
+        }
+    }
 
-export default sdk;
+    static get sdk(){
+        if(RocketChatSDK.currentSdk) return RocketChatSDK.currentSdk;
+        const host = cleanURLFromSlash(getCurrentServer());
+        return RocketChatSDK.initialize(host, true);;
+    }
+
+}
+
+export default RocketChatSDK;

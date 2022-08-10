@@ -1,29 +1,51 @@
-import sdk from "../sdk";
+import RocketChat from "../sdk";
 import { LoginResultAPI, LoginCredentials } from "../interfaces/login";
-import { setAuthToken, getAuthToken } from "./authToken.util";
+import { setAuthToken, getAuthToken, removeAuthToken } from "./authToken.util";
+const { ipcRenderer } = window.require("electron");
 
-async function loginWithPassword(){
-    const email: string = process.env.REACT_APP_EMAIL || "";
-    const password: string = process.env.REACT_APP_PASSWORD || "";
-    const user: LoginCredentials = {
-        email,
+function connect(host: string, useSSL: boolean){
+    try {
+        RocketChat.initialize(host, useSSL);
+    } catch(err){
+        throw err;
+    }
+}
+
+async function loginWithPassword(host: string, {user, password}: LoginCredentials){
+
+    connect(host, true);
+
+    const userCredentials: LoginCredentials = {
+        user,
         password
     };
-    const result: LoginResultAPI = await sdk.login(user);
-    if(result.token){
+
+    try {
+        const result: LoginResultAPI = await RocketChat.sdk.login(userCredentials);
         setAuthToken(result.token);
-    } else {
-        return new Error('Failed login via Email and Password');
+    } catch(err){
+        throw Error('Failed login via Email and Password');
     }
+
 }
 
 async function realTimeLoginWithAuthToken(){
+    const host = process.env.ROCKETCHAT_URL || "";
+    connect(host, true);
+
     const token = getAuthToken() || "";
-    const res = await sdk.login({resume: token});
-    if(!res.token){
-        return new Error('Failed login via Auth Token');
+    try {
+        await RocketChat.sdk.login({resume: token});
+    } catch(err){
+        removeAuthToken();
+        throw Error('Failed login via Auth Token');
     }
 }
 
+async function logout(){
+    await RocketChat.sdk.logout();
+    ipcRenderer.send("close-all-window-chat");
+    removeAuthToken();
+}
 
-export { loginWithPassword, realTimeLoginWithAuthToken };
+export { loginWithPassword, realTimeLoginWithAuthToken, logout };

@@ -72,6 +72,7 @@ function ChatWindow(props: {isThread: boolean}) {
     if(message.tmid && !props.isThread || message.tmid != tmid) return;
     let scroll: boolean = false;
     // Check if user is already at down of page then scroll to show message
+    console.log(isInViewport(bottomRef.current));
     if(isInViewport(bottomRef.current)){
       scroll = true;
     }
@@ -134,7 +135,8 @@ function ChatWindow(props: {isThread: boolean}) {
 
   return loaded ? (
     <Container >
-      {!props.isThread && <HeaderFooterContainer>
+      {!props.isThread &&
+      <HeaderFooterContainer>
         <Header />
       </HeaderFooterContainer>}
       <MessageList messages={messages}
@@ -142,8 +144,9 @@ function ChatWindow(props: {isThread: boolean}) {
         onEditMessageAction={onEditMessageAction}
         setMessageToEdit={setMessageToEdit}
         isThread={props.isThread && tmid}
-      />
-      <div ref={bottomRef} />
+      >
+        <div ref={bottomRef} />
+      </MessageList>
       <HeaderFooterContainer>
         <MessageForm messageToEdit={messageToEdit} setMessageToEdit={setMessageToEdit} isThread={props.isThread && tmid} />
       </HeaderFooterContainer>

@@ -1,16 +1,16 @@
-import sdk from "../sdk";
+import RocketChat from "../sdk";
 import { RealtimeAPIMessage } from "../interfaces/message";
 import { MESSAGES_LOAD_PER_REQUEST } from "../constants";
 
 const filterThreadMessages = (messages: RealtimeAPIMessage[]) => messages.filter((message) => !message.tmid);
 
 function markRoomAsRead(roomId: string | undefined) {
-	return sdk.methodCall('readMessages', roomId);
+	return RocketChat.sdk.methodCall('readMessages', roomId);
 };
 
 async function loadMessagesFromRoom(roomId: string | undefined, numberOfMessages: number, lastMessageRetrievedData: any): Promise<{messages: RealtimeAPIMessage[]}> {
     if(!roomId) throw new Error('Room ID Not Found!');
-    const res = await sdk.methodCall("loadHistory", roomId, lastMessageRetrievedData, numberOfMessages, null);
+    const res = await RocketChat.sdk.methodCall("loadHistory", roomId, lastMessageRetrievedData, numberOfMessages, null);
     const messages: RealtimeAPIMessage[] = res.messages;
     const filteredMessages = filterThreadMessages(messages);
     filteredMessages.reverse();
@@ -24,13 +24,13 @@ async function loadMessagesFromRoom(roomId: string | undefined, numberOfMessages
 }
 
 async function realTimeSubscribeToRoom(roomId: string, callback: any){
-    await sdk.subscribeRoom(roomId);
-    return sdk.onStreamData("stream-room-messages", callback);
+    await RocketChat.sdk.subscribeRoom(roomId);
+    return RocketChat.sdk.onStreamData("stream-room-messages", callback);
 }
 
 async function loadMessagesFromThread(threadId: string | undefined): Promise<RealtimeAPIMessage[]> {
     if(!threadId) throw new Error('Thread ID Not Found!');
-    const res = await sdk.methodCall("getThreadMessages", {tmid: threadId});
+    const res = await RocketChat.sdk.methodCall("getThreadMessages", {tmid: threadId});
     return res.reverse();
 }
 

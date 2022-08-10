@@ -9,6 +9,7 @@ const Container = styled.div`
     display: flex;
     flex-direction: row;
     height: 100%;
+    margin-bottom:10px;
     overflow-x: hidden;
 `
 
@@ -31,6 +32,7 @@ const ShowMoreMessages = styled.div`
     height: 30px;
     cursor: pointer;
     margin-bottom: 5px;
+    margin-top: 5px;
     &:hover {
         background-color:rgba(186, 186, 186, 0.1);
     }
@@ -50,7 +52,6 @@ const DarkLayer = styled.div`
   }}
 `
 function MessageList(props : any) {
-
     const messages = props.messages;
     const state = useSelector((state: any) => state.thread);
 
@@ -66,6 +67,7 @@ function MessageList(props : any) {
                         <MessageRow key={messageId} message={messages[messageId]} onEditMessageAction={props.onEditMessageAction} setMessageToEdit={props.setMessageToEdit} />
                     );
                 }) : null}
+                {props.children && props.children}
             </ChatContainer>
             {!props.isThread && state.tmid ? <MessageThread /> : null}
         </Container>

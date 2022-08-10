@@ -27,7 +27,9 @@ function ChatList() {
   const [rooms, setRooms] = useState<RoomsMap>({});
   const [userID, setUserID] = useState<string | undefined>();
   let topRoomID: string|null = null;
-  let navigate = useNavigate();
+
+  const navigate = useNavigate();
+  const navigateToLogin = () => navigate('/');
 
   const getRoomsList = async () => {
     const fetchedRooms: Room[] = await getListOfRooms();
@@ -55,7 +57,7 @@ function ChatList() {
         await realTimeLoginWithAuthToken();
         await loadRoomsAndRegisterSubscriptions();
       } catch(err){
-        navigate('/');
+        navigateToLogin();
       }
     } else {
       await loadRoomsAndRegisterSubscriptions();
