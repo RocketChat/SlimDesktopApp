@@ -103,7 +103,7 @@ function Login() {
         e.preventDefault();
         setDisabled(true);
         try {
-            await loginWithPassword(host || "", {
+            await loginWithPassword(host || "https://open.rocket.chat", {
             user,
             password: password || ""
             });
@@ -143,7 +143,7 @@ function Login() {
 
                 <FormItem>
                     <Label fontSize="16px">Host</Label>
-                    <FormInput placeholder="e.g. (https://open/rocket.chat)" type="text" onChange={(e) => setHost(e.target.value)} />
+                    <FormInput placeholder="e.g. (https://open.rocket.chat)" type="text" onChange={(e) => setHost(e.target.value)} />
                 </FormItem>
 
                 <FormItem>
