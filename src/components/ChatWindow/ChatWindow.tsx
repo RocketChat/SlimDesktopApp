@@ -72,7 +72,6 @@ function ChatWindow(props: {isThread: boolean}) {
     if(message.tmid && !props.isThread || message.tmid != tmid) return;
     let scroll: boolean = false;
     // Check if user is already at down of page then scroll to show message
-    console.log(isInViewport(bottomRef.current));
     if(isInViewport(bottomRef.current)){
       scroll = true;
     }
