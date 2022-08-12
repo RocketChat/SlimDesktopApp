@@ -1,1 +1,1 @@
-export const MESSAGES_LOAD_PER_REQUEST = 6;
+export const MESSAGES_LOAD_PER_REQUEST = 60;

@@ -61,14 +61,14 @@ function ChatItem(props: Room) {
                 <Container column>
                     <div style={{flex:1, display:'flex', flexDirection:'row', marginTop:'6px'}}>
                         <div style={{fontSize:'14px', color:'#FFF'}}>
-                            {props.name}
+                            {props.name && props.name}
                         </div>
                         {/*<div style={{position:'relative', left:'250px', fontSize:'12px', color:'#9EA2A8'}}>
                             {props.lastMessageDate ? props.lastMessageDate : ""}
                         </div>*/}
                     </div>
                     <div style={{fontSize:'14px', color:'#FFF', whiteSpace:"nowrap", overflow: "hidden", textOverflow:"ellipsis", display:"inherit"}}>
-                        {props.lastMessage ? props.lastMessage.u.name + ": " : "No Messages Yet"}
+                        {props.lastMessage && props.lastMessage.u && props.lastMessage.u.name ? props.lastMessage.u.name + ": " : "No Messages Yet"}
                         {props.lastMessage ? props.lastMessage.msg : ""}
                     </div>
                 </Container>

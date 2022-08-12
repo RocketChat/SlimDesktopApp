@@ -37,13 +37,13 @@ const BodyContainer = styled.div`
 const MessageInfo = styled.div`
     margin-left: 3px;
     display:flex;
-    flex-dirction:row;
+    flex-direction:row;
 `
 
 const MessageBody = styled.div`
     margin-left: 3px;
     display:flex;
-    flex-dirction:row;
+    flex-direction:column;
 
     > * {
         margin: 0 3px;
