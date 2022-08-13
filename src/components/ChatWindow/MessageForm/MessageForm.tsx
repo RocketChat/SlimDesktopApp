@@ -6,12 +6,13 @@ import { useParams } from "react-router-dom";
 import { RealtimeAPIMessage } from '../../../interfaces/message';
 import { useSelector } from "react-redux";
 import EmojiPicker from "./Attachments/EmojiPicker/EmojiPicker";
+import Emoji from "../MessageList/MessageRow/components/MessageBodyRender/Emoji";
 
 const Container = styled.div`
     position: fixed;
     bottom: 0px;
     width: 97%;
-    padding: 1px 10px;
+    padding: 0;
     margin: 10px;
     background-color: #FFF;
     display: flex;
@@ -31,11 +32,24 @@ const TextInput = styled.textarea`
     &:focus {
         outline: none !important;
     }
+
+    &::placeholder {
+        color: #000;
+        vertical-align: middle;
+        line-height: 2rem;
+    }
+
+    &:focus::placeholder {
+        color: transparent;
+    }
+
 `
 
 const Action = styled.span`
     line-height: 2rem;
     cursor: pointer;
+    padding: 5px;
+    ${(props: {dir: string}) => props.dir == "left" ? `border-right: 1px solid #cbced1;` : `border-left: 1px solid #cbced1;`}
 `
 
 
@@ -78,7 +92,7 @@ function MessageForm(props: any) {
     }
 
     const addEmojiToMessage = (emoji: string) => {
-        setMessage(message + `:${emoji}:`);
+        setMessage(message + `:${emoji}: `);
     }
 
     useEffect(() => {
@@ -91,10 +105,9 @@ function MessageForm(props: any) {
 
     return (
         <Container>
-            <Action onClick={openEmojiPicker}>E</Action>
+            <Action onClick={openEmojiPicker} dir={"left"}><Emoji emojiHandle={`:smile:`}></Emoji></Action>
             {isEmojiPickerVisible && <EmojiPicker addEmojiToMessage={addEmojiToMessage} />}
             <TextInput placeholder={"Message"} onChange={onMessageChange} onKeyDown={onPressSendMessage} value={message} />
-            <Action>A</Action>
         </Container>
     );
 }
