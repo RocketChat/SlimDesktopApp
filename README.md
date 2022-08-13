@@ -34,7 +34,8 @@ yarn start
 - [x] Main Chat Window Functionalities (Send/Delete/Edit/...etc) Messages
 - [x] User Status Feature
 - [x] Chat Window Attachments (Images/Videos/Audios/Quotes)
-- [x] Parsing Message Threads (Images/Videos/Audios/Quotes)
+- [x] Parsing Message Threads
+- [x] Add Emoji Picker to Chat Windows
 
 ### Screenshots
 
