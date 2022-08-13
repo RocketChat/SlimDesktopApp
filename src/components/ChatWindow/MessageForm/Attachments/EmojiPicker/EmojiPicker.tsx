@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import { hot } from "react-hot-loader/root";
 import styled from "styled-components"
 import Emoji from "../../../MessageList/MessageRow/components/MessageBodyRender/Emoji";
@@ -25,7 +25,8 @@ const Filter = styled.div`
     margin: 0;
 `;
 const FilterList = styled.ul`
-    width: 100%;
+    position: fixed;
+    background-color: #FFF;
     padding: 0 5px;
     margin: 0;
     display: flex;
@@ -51,6 +52,7 @@ const Emojis = styled.div`
 const EmojiSections = styled.div``;
 const EmojiSectionName = styled.h4`
     margin: 2px 8px;
+    padding-top: 50px;
 `;
 const EmojiContainer = styled.div`
     width: 27px;
@@ -74,8 +76,9 @@ function EmojiRender(props: {emojiHandle: string}){
 
 function EmojiSection(props: any){
     const name: string = props.name;
+
     return(
-        <div id={name}>
+        <div id={name} ref={props.reference}>
             <EmojiSectionName>{name}</EmojiSectionName>
             <Emojis>
                 {
@@ -90,7 +93,19 @@ function EmojiSection(props: any){
     );
 }
 
+
+
 function EmojiPicker(props: any) {
+    const references: any = {};
+    Object.keys(emojis).map((category) => {
+        references[category] = useRef<null | HTMLElement>(null);
+    });
+
+    const navigateToEmojiSection = (emojiSection: string) => {
+        console.log(references);
+        references[emojiSection] && references[emojiSection].current?.scrollIntoView({behavior: 'smooth'});
+    }
+
     return (
         <Container>
             <Filter>
@@ -98,7 +113,7 @@ function EmojiPicker(props: any) {
                     {
                         Object.keys(emojis).map((category) =>
                             <FilterItem key={category}>
-                                <a>
+                                <a onClick={() => navigateToEmojiSection(category)}>
                                     <EmojiRender emojiHandle={emojis[category][0]} />
                                 </a>
                             </FilterItem>
@@ -107,7 +122,7 @@ function EmojiPicker(props: any) {
                 </FilterList>
                 <EmojiSections>
                     {
-                        Object.keys(emojis).map((category) => <EmojiSection key={category} name={category} onEmojiClick={props.addEmojiToMessage} />)
+                        Object.keys(emojis).map((category) => <EmojiSection reference={references[category]} key={category} name={category} onEmojiClick={props.addEmojiToMessage} />)
                     }
                 </EmojiSections>
             </Filter>
