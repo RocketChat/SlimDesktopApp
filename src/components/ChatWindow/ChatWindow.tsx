@@ -59,12 +59,21 @@ function ChatWindow(props: {isThread: boolean}) {
     await showMessages();
     await markRoomAsRead(id); // TODO:: check if window is focused
     setLoaded(true);
+    // Auto Scroll to bottom when chat opens
+    scrollToBottom("auto");
   }
 
   const loginToThread = async () => {
     await realTimeSubscribe();
     await showMessages();
     setLoaded(true);
+    // Auto Scroll to bottom when chat opens
+    scrollToBottom("auto");
+  }
+
+  const scrollToBottom = (type: string = "smooth") => {
+    if(type == "smooth") bottomRef.current?.scrollIntoView({behavior: 'smooth'});
+    else bottomRef.current?.scrollIntoView({behavior: 'auto'})
   }
 
   const processMessages = async(ddpMessage:DDPMessage) => {
@@ -72,13 +81,12 @@ function ChatWindow(props: {isThread: boolean}) {
     if(message.tmid && !props.isThread || message.tmid != tmid) return;
     let scroll: boolean = false;
     // Check if user is already at down of page then scroll to show message
-    console.log(isInViewport(bottomRef.current));
     if(isInViewport(bottomRef.current)){
       scroll = true;
     }
 
     await addMessage(message);
-    if(scroll) bottomRef.current?.scrollIntoView({behavior: 'smooth'});
+    if(scroll) scrollToBottom();
     if(props.isThread) await markRoomAsRead(id);
   }
 

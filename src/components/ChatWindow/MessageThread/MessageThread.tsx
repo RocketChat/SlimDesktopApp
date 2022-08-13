@@ -2,7 +2,7 @@ import React from "react";
 import { hot } from "react-hot-loader/root";
 import styled from "styled-components";
 import ChatWindow from "../ChatWindow";
-import { AiOutlineClose } from "react-icons/ai";
+import { IoReturnDownBackSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { closeThread } from "../../../state/actions";
 
@@ -13,7 +13,7 @@ const Container = styled.div`
     position: fixed;
     right: 0;
     position: fixed;
-    width: 90%;
+    width: 100%;
     height: 90%;
     z-index: 999;
     background-color: white;
@@ -39,27 +39,12 @@ const RoomName = styled.div`
     font-size: 1rem;
     font-weight: 700;
     letter-spacing: 0rem;
-    line-height: 1.5rem;
+    line-height: 2rem;
     height: 15px;
     position: relative;
 `
 
-const Close = styled.div`
-    flex:20;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: 0rem;
-    line-height: 1.5rem;
-    height: 15px;
-    position: relative;
-`
-
-const Icons = styled.div`
-    flex: 2;
-`
-
+const Icons = styled.div``
 
 const CloseIcon = styled.div`
     width: 20px;
@@ -67,6 +52,8 @@ const CloseIcon = styled.div`
     border-radius: 50%;
     line-height: 1.5rem;
     text-align: center;
+    padding: 6px;
+    margin-right: 2px;
     &:hover {
         background-color:rgba(186, 186, 186, 0.1);
     }
@@ -86,10 +73,10 @@ function Header() {
 
     return (
     <HeaderStyled>
-        <RoomName>Thread</RoomName>
         <Icons>
-            <CloseIcon onClick={closeThreadClick}><AiOutlineClose fontSize={"13px"} /></CloseIcon>
+            <CloseIcon onClick={closeThreadClick}><IoReturnDownBackSharp fontSize={"13px"} /></CloseIcon>
         </Icons>
+        <RoomName>Thread</RoomName>
     </HeaderStyled>
     );
 }

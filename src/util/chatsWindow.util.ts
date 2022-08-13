@@ -31,7 +31,9 @@ async function realTimeSubscribeToRoom(roomId: string, callback: any){
 async function loadMessagesFromThread(threadId: string | undefined): Promise<RealtimeAPIMessage[]> {
     if(!threadId) throw new Error('Thread ID Not Found!');
     const res = await RocketChat.sdk.methodCall("getThreadMessages", {tmid: threadId});
-    return res.reverse();
+    const messageThread: RealtimeAPIMessage = res[0];
+    res.push(messageThread);
+    return res.reverse(); // make the thread message comes first (not last)
 }
 
 

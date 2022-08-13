@@ -7,14 +7,15 @@ import { openThread } from "../../../../../../state/actions";
 
 const Container = styled.div`
     position: absolute;
-    right: 10px;
+    right: 25px;
     cursor: pointer;
     z-index: 100;
 `
 
 const ActionsModal = styled.div`
-    position: fixed;
+    position: absolute;
     right: 25px;
+    width: 150px;
     background-color: #FFF;
     border: 1px solid #eeeff1;
     z-index: 100;

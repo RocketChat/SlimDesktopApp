@@ -24,6 +24,7 @@ const ChatItemContainer = styled.div`
     justify-content: normal;
     align-items: start;
     padding-left: 8px;
+    margin-bottom: 5px;
     cursor: pointer;
     &:hover {
         background-color:rgba(17, 12, 12, 0.5);
@@ -59,7 +60,7 @@ function ChatItem(props: Room) {
             </div>
             <div style={{flex:12}}>
                 <Container column>
-                    <div style={{flex:1, display:'flex', flexDirection:'row', marginTop:'6px'}}>
+                    <div style={{flex:1, display:'flex', flexDirection:'row'}}>
                         <div style={{fontSize:'14px', color:'#FFF'}}>
                             {props.name && props.name}
                         </div>
