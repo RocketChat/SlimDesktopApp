@@ -4,6 +4,24 @@ import installExtension, {
 } from "electron-devtools-installer";
 import electron from "electron";
 import { Room } from "../interfaces/room";
+import Store from "electron-store";
+
+const storage = new Store();
+
+function getWindowSizePreference() : number[] {
+    const defaultSize = [800, 600];
+    const size: number[] = storage.get("rc-chat-win-size");
+    if(size) return size;
+
+    storage.set("rc-chat-win-size", defaultSize);
+    return defaultSize;
+}
+
+function setWindowSizePreference(windowSize: number[]){
+    const defaultSize = [800, 600];
+    storage.set("rc-chat-win-size", windowSize || defaultSize);
+}
+
 
 declare global {
   const MAIN_WINDOW_WEBPACK_ENTRY: string;
@@ -74,13 +92,19 @@ const createChatWindow = (e: any, room: Room) => {
     return;
   }
 
+  const windowSizePref = getWindowSizePreference();
   let chatWindow: null | BrowserWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: windowSizePref[0],
+    height: windowSizePref[1],
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
     },
+  });
+
+  chatWindow.on('resize', function () {
+    var size   = chatWindow?.getSize() || [800, 600];
+    setWindowSizePreference(size);
   });
 
   // To make any link clicked on pop-up in the default browser
