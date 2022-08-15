@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { hot } from "react-hot-loader/root";
 import styled from "styled-components"
-import { sendTextMessage, editTextMessage } from "../../../util/message.util";
+import { sendTextMessage, editTextMessage, sendFileMessage } from "../../../util/message.util";
 import { useParams } from "react-router-dom";
 import { RealtimeAPIMessage } from '../../../interfaces/message';
 import { useSelector } from "react-redux";
 import EmojiPicker from "./Attachments/EmojiPicker/EmojiPicker";
-import Emoji from "../MessageList/MessageRow/components/MessageBodyRender/Emoji";
-
+import FileToUpload from "./Attachments/FileToUpload/FileToUpload";
+import { AiOutlinePlus } from "react-icons/ai";
+import { GrEmoji } from "react-icons/gr";
 const Container = styled.div`
     position: fixed;
     bottom: 0px;
@@ -29,6 +30,7 @@ const TextInput = styled.textarea`
     padding: 5px;
     box-sizing: border-box;
     color: #2f343d;
+    overflow: hidden;
     &:focus {
         outline: none !important;
     }
@@ -56,6 +58,9 @@ const Action = styled.span`
 function MessageForm(props: any) {
     const [isEmojiPickerVisible, setEmojiPickerVisibility] = useState<boolean>(false);
     const [message, setMessage] = useState("");
+    const [selectedFile, setSelectedFile] = useState<File>();
+
+    const inputFileReference = useRef<null | HTMLElement>(null);
 
     const { id: roomId } = useParams();
     const thread = useSelector((state: any) => state.thread);
@@ -68,16 +73,28 @@ function MessageForm(props: any) {
     const onPressSendMessage = async (e: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         if(e.keyCode == 13 && e.shiftKey == false) {
             e.preventDefault();
-            if(await sendMessage()){
-                setMessage("");
-            }
+            setMessage("");
+            await sendMessage();
         }
+    }
+
+    const handleFileMessage = async () => {
+        const formData = new FormData();
+        const threadId = props.isThread ? tmid : null;
+
+        formData.append("file", selectedFile);
+        formData.append("msg", message);
+        if(tmid) formData.append("tmid", threadId);
+        clearFileToUpload();
+
+        return await sendFileMessage(roomId, formData);
     }
 
     const sendMessage = async () => {
         // Send New Message
         if(!props.messageToEdit){
             const threadId = props.isThread ? tmid : null;
+            if(selectedFile) return await handleFileMessage();
             return await sendTextMessage(roomId, message, threadId);
         }
 
@@ -95,6 +112,20 @@ function MessageForm(props: any) {
         setMessage(message + `:${emoji}: `);
     }
 
+    const attachFileToMessage = () => {
+        inputFileReference.current?.click();
+    }
+
+    const changeFile = (e: any) => {
+        const file = e.target.files[0];
+        if(!file) return;
+        setSelectedFile(file);
+    }
+
+    const clearFileToUpload = () => {
+        setSelectedFile(undefined);
+    }
+
     useEffect(() => {
         if(props.messageToEdit){
             setMessage(props.messageToEdit.msg);
@@ -104,11 +135,18 @@ function MessageForm(props: any) {
     }, [props.messageToEdit]);
 
     return (
-        <Container>
-            <Action onClick={openEmojiPicker} dir={"left"}><Emoji emojiHandle={`:smile:`}></Emoji></Action>
-            {isEmojiPickerVisible && <EmojiPicker addEmojiToMessage={addEmojiToMessage} />}
-            <TextInput placeholder={"Message"} onChange={onMessageChange} onKeyDown={onPressSendMessage} value={message} />
-        </Container>
+        <div>
+            {selectedFile && <FileToUpload file={selectedFile} clearFileToUpload={clearFileToUpload} />}
+            <Container>
+                <Action onClick={openEmojiPicker} dir={"left"}><GrEmoji /></Action>
+                {isEmojiPickerVisible && <EmojiPicker addEmojiToMessage={addEmojiToMessage} />}
+                <TextInput placeholder={"Message"} onChange={onMessageChange} onKeyDown={onPressSendMessage} value={message} />
+                <Action dir={"right"}>
+                    <input type="file" hidden ref={inputFileReference} onChange={changeFile} />
+                    <AiOutlinePlus onClick={attachFileToMessage} />
+                </Action>
+            </Container>
+        </div>
     );
 }
 
