@@ -102,7 +102,6 @@ function EmojiPicker(props: any) {
     });
 
     const navigateToEmojiSection = (emojiSection: string) => {
-        console.log(references);
         references[emojiSection] && references[emojiSection].current?.scrollIntoView({behavior: 'smooth'});
     }
 
