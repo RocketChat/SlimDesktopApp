@@ -70,6 +70,7 @@
     "@storybook/react": "^6.5.9",
     "assert": "^2.0.0",
     "dotenv": "^16.0.1",
+    "electron-store": "^8.1.0",
     "emojione": "^4.5.0",
     "fs": "^0.0.1-security",
     "http": "^0.0.1-security",
