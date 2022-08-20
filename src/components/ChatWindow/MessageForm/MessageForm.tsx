@@ -9,6 +9,8 @@ import EmojiPicker from "./Attachments/EmojiPicker/EmojiPicker";
 import FileToUpload from "./Attachments/FileToUpload/FileToUpload";
 import { AiOutlinePlus } from "react-icons/ai";
 import { GrEmoji } from "react-icons/gr";
+import { TbSend } from "react-icons/tb";
+
 const Container = styled.div`
     position: fixed;
     bottom: 0px;
@@ -70,11 +72,15 @@ function MessageForm(props: any) {
         setMessage(e.target.value);
     }
 
+    const sendMessageWithText = async () => {
+        setMessage("");
+        await sendMessage();
+    }
+
     const onPressSendMessage = async (e: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         if(e.keyCode == 13 && e.shiftKey == false) {
             e.preventDefault();
-            setMessage("");
-            await sendMessage();
+            sendMessageWithText();
         }
     }
 
@@ -136,13 +142,14 @@ function MessageForm(props: any) {
 
     return (
         <div>
-            {selectedFile && <FileToUpload file={selectedFile} clearFileToUpload={clearFileToUpload} />}
+            {selectedFile && <FileToUpload file={selectedFile} clearFileToUpload={clearFileToUpload} sendFile={handleFileMessage} />}
             <Container>
                 <Action onClick={openEmojiPicker} dir={"left"}><GrEmoji /></Action>
                 {isEmojiPickerVisible && <EmojiPicker addEmojiToMessage={addEmojiToMessage} />}
                 <TextInput placeholder={"Message"} onChange={onMessageChange} onKeyDown={onPressSendMessage} value={message} />
+                <Action dir={"right"}><TbSend style={{width:'20px'}} onClick={sendMessageWithText} /></Action>
                 <Action dir={"right"}>
-                    <input type="file" hidden ref={inputFileReference} onChange={changeFile} />
+                    <input type="file" hidden ref={inputFileReference} onChange={changeFile} key={selectedFile?.name} />
                     <AiOutlinePlus onClick={attachFileToMessage} />
                 </Action>
             </Container>
