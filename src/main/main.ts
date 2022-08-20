@@ -120,6 +120,7 @@ const createChatWindow = (e: any, room: Room) => {
   chatWindow.setTitle(room.name);
 
   chatWindow.on("closed", () => {
+      mainWindow?.webContents.send('windowClosed', {roomId: room._id});
       currentOpenedWindows.delete(room._id);
       chatWindow = null;
   });
