@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { hot } from "react-hot-loader/root";
 import styled from "styled-components"
 import { ImCancelCircle } from "react-icons/im";
+import { TbSend } from "react-icons/tb";
 
 const Container = styled.div`
     position: relative;
@@ -22,23 +23,22 @@ const FileName = styled.p`
     flex: 20;
 `
 
-function FileToUpload(props: {file: File, clearFileToUpload: () => void}) {
+function FileToUpload(props: {file: File, clearFileToUpload: () => void, sendFile: () => void}) {
     const file = props.file;
 
     const cancelFile = () => {
         props.clearFileToUpload();
     }
 
+    const sendFile = () => {
+        props.sendFile();
+    }
+
     return (
         <Container>
             <FileName>File Uploaded: {file.name}</FileName>
-            <ImCancelCircle style={{
-                position: 'absolute',
-                right: '15px',
-                flex: 1,
-                marginTop: '3px',
-                cursor: 'pointer'
-            }} onClick={cancelFile} />
+            <TbSend style={{position: 'absolute', right: '15px', flex: 1, marginTop: '3px',cursor: 'pointer'}} onClick={sendFile} />
+            <ImCancelCircle style={{position: 'absolute', right: '45px', flex: 1, marginTop: '3px',cursor: 'pointer'}} onClick={cancelFile} />
         </Container>
     );
 }

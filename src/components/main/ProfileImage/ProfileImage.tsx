@@ -5,21 +5,7 @@ import { UserStatus } from "../../../interfaces/user";
 import RocketChat from '../../../sdk';
 import { getUserID } from '../../../util/user.util';
 import { getUserStatusByUsername } from '../../../util/status.util';
-
-const handleStatusTypeColor = (userStatus:UserStatus)  => {
-    switch (userStatus) {
-      case UserStatus.BUSY:
-        return "#ff4b4b"; // Red
-    case UserStatus.ONLINE:
-        return "#2de0a5"; // Green
-    case UserStatus.OFFLINE:
-        return "#c1c1c1"; // Light Grey
-    case UserStatus.AWAY:
-        return "#ffba65"; // Yellow
-    default:
-        return "#c1c1c1";
-    }
-};
+import Status from "./Status";
 
 const ProfileImageTag = styled.img`
     border-radius:15%;
@@ -28,18 +14,7 @@ const ProfileImageTag = styled.img`
     width: ${(props: { size: string; }) => props.size == "large" ? "33px" : "18px"};
 `
 
-const Status = styled.span`
-    height: 0.75rem;
-    width: 0.75rem;
-    background-color: ${(props: { userStatus: UserStatus; }) => handleStatusTypeColor(props.userStatus)};
-    background-size: contain;
-    display: inline-block;
-    position: relative;
-    bottom: 17.5px;
-    left: 23.5px;
-    border-radius: 50%;
-    border: 1px solid;
-`
+
 
 const Container = styled.div`
     height: ${(props: { size: string; }) => props.size == "large" ? "2rem" : "1rem"};
@@ -48,7 +23,7 @@ const Container = styled.div`
 
 
 const ProfileImage = (props: any) => {
-    const [userStatus, setUserStatus] = useState<UserStatus>(UserStatus.ONLINE);
+    const [userStatus, setUserStatus] = useState<UserStatus>(UserStatus.OFFLINE);
 
     const parseOnStatusChange = async (ddpMessage: any) => {
         const { eventName } = ddpMessage.fields;
@@ -102,7 +77,7 @@ const ProfileImage = (props: any) => {
     return (
         <Container size={props.size}>
             <ProfileImageTag src={getRoomAvatar("/" + username)} size={props.size} />
-            {props.showStatus && <Status userStatus={userStatus} />}
+            {props.showStatus && <Status profileImage={true} userStatus={userStatus} />}
         </Container>
     );
 }
