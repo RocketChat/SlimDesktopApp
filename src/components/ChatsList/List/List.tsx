@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { hot } from "react-hot-loader/root";
 import styled from "styled-components"
 import { Room } from "../../../interfaces/room";
 import { isRoomDM } from "../../../util/chatsList.util";
 import ProfileImage from "../../main/ProfileImage/ProfileImage";
+import { useDispatch, useSelector } from "react-redux";
+import { closeRoom, openRoom, readRoom } from "../../../state/actions";
+
 const { ipcRenderer } = window.require("electron");
 
 const Container = styled.div`
@@ -33,29 +36,33 @@ const ChatItemContainer = styled.div`
     }
 `
 
+const UnreadMessage = styled.p`
+    position: relative;
+    font-size: 12px;
+    text-align: end;
+    color: rgb(255 255 255);
+    padding: 0px;
+    background-color: rgb(0 184 255);
+    border-radius: 50%;
+    padding: 3px;
+    position: absolute;
+    right: 20px;
+`
 
-interface OpenedRooms {
-    [roomId: string]: boolean
-}
 
 function List(props: any) {
-    const [openedRooms, setOpenedRooms] = useState<OpenedRooms | null>({});
+    const dispatch = useDispatch();
+    const openedRooms = useSelector((state: any) => state.openedWindows);
 
-    const toggleRoom = (roomId: string, isOpening :boolean) => {
-        if(isOpening && openedRooms && openedRooms[roomId]) return;
-        const oldRooms = {...openedRooms};
-        setOpenedRooms(null);
-        setOpenedRooms((_) => {
-            let rooms = {...oldRooms};
-            if(rooms[roomId]) rooms[roomId] = false;
-            else rooms[roomId] = true;
-            return rooms;
-        });
+    const closeRoomFunction = (roomId: string) => {
+        dispatch(closeRoom(roomId));
     }
 
-    ipcRenderer.on('windowClosed', (event, message) => {
-        toggleRoom(message.roomId, false);
-    });
+    useEffect(() => {
+        ipcRenderer.on('windowClosed', (event, message) => {
+            closeRoomFunction(message.roomId);
+        });
+    }, []);
 
     let rooms: any = props.rooms;
     return (
@@ -63,17 +70,24 @@ function List(props: any) {
             {rooms ? Object.keys(rooms).map((roomId: string) => {
                 const room = rooms[roomId];
                 return (
-                    <ChatItem key={roomId} lastMessageDate={room.lastMessageDate} _id={room._id} name={room.name} lastMessage={room.lastMessage} avatarLink={room.avatarLink} isOpened={openedRooms && openedRooms[room._id]} onOpenRoom={toggleRoom} />
+                    <ChatItem key={roomId} roomsStatus={props.roomsStatus} lastMessageDate={room.lastMessageDate} _id={room._id} name={room.name} lastMessage={room.lastMessage} avatarLink={room.avatarLink} isOpened={openedRooms[room._id]} />
                 );
             }) : null}
         </Container>
     );
 }
 
-function ChatItem(props: Room & {isOpened: boolean | null} & {onOpenRoom: ((roomId: string, isOpening: boolean) => void)}) {
+function ChatItem(props: Room & {isOpened: boolean | null} & {roomsStatus: any}) {
+
+    const dispatch = useDispatch();
+
+    const openRoomFunction = (roomId: string) => {
+        dispatch(openRoom(roomId));
+        dispatch(readRoom(roomId));
+    }
 
     const openChatWindow = () => {
-        props.onOpenRoom(props._id, true);
+        openRoomFunction(props._id);
         ipcRenderer.send("create-window-chat", {
             _id: props._id,
             name: props.name,
@@ -81,22 +95,24 @@ function ChatItem(props: Room & {isOpened: boolean | null} & {onOpenRoom: ((room
         });
     }
 
+    const rooms = props.roomsStatus;
+    const notify = rooms && props._id in rooms && rooms[props._id].alert;
+    const unread = rooms && props._id in rooms && rooms[props._id].unread;
+
     return (
         <ChatItemContainer onClick={openChatWindow} isOpened={props.isOpened}>
             <div style={{flex: 1}}>
                 <ProfileImage username={props.avatarLink} id={props._id} size="large" showStatus={isRoomDM(props)}  />
             </div>
             <div style={{flex:12}}>
-                <Container column>
+                <Container column style={{color: `rgba(255, 255, 255, ${notify ? `1` : `0.7`})`}}>
                     <div style={{flex:1, display:'flex', flexDirection:'row'}}>
-                        <div style={{fontSize:'14px', color:'#FFF'}}>
+                        <div style={{fontSize:'14px'}}>
                             {props.name && props.name}
                         </div>
-                        {/*<div style={{position:'relative', left:'250px', fontSize:'12px', color:'#9EA2A8'}}>
-                            {props.lastMessageDate ? props.lastMessageDate : ""}
-                        </div>*/}
+                        {unread != 0 ? <UnreadMessage>{unread}</UnreadMessage> : null}
                     </div>
-                    <div style={{fontSize:'14px', color:'#FFF', whiteSpace:"nowrap", overflow: "hidden", textOverflow:"ellipsis", display:"inherit"}}>
+                    <div style={{fontSize:'14px', whiteSpace:"nowrap", overflow: "hidden", textOverflow:"ellipsis", display:"inherit"}}>
                         {props.lastMessage && props.lastMessage.u && props.lastMessage.u.name ? props.lastMessage.u.name + ": " : "No Messages Yet"}
                         {props.lastMessage ? props.lastMessage.msg : ""}
                     </div>
