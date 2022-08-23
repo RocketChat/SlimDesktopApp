@@ -57,7 +57,7 @@ function ChatWindow(props: {isThread: boolean}) {
     await realTimeLoginWithAuthToken();
     await realTimeSubscribe();
     await showMessages();
-    await markRoomAsRead(id); // TODO:: check if window is focused
+    await markAsRead(); // TODO:: check if window is focused
     setLoaded(true);
     // Auto Scroll to bottom when chat opens
     scrollToBottom("auto");
@@ -69,6 +69,10 @@ function ChatWindow(props: {isThread: boolean}) {
     setLoaded(true);
     // Auto Scroll to bottom when chat opens
     scrollToBottom("auto");
+  }
+
+  const markAsRead = async () => {
+    await markRoomAsRead(id);
   }
 
   const scrollToBottom = (type: string = "smooth") => {
@@ -87,7 +91,7 @@ function ChatWindow(props: {isThread: boolean}) {
 
     await addMessage(message);
     if(scroll) scrollToBottom();
-    if(props.isThread) await markRoomAsRead(id);
+    if(props.isThread) await markAsRead();
   }
 
   const realTimeSubscribe = async () => {
