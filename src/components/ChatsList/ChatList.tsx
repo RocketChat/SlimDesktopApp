@@ -89,6 +89,7 @@ function ChatList() {
       const roomChanged: Room = ddpMessage.fields.args[1];
       const roomChangedId: string = roomChanged._id;
       const newRoomInfo = getRoomInfo(roomChanged);
+      dispatch(handleRoomRead(roomChangedId));
 
       setRooms((prevRooms) => {
         let newRooms : RoomsMap = {};
@@ -105,8 +106,6 @@ function ChatList() {
           // otherwise, just change the room
           prevRooms[roomChangedId] = {...newRoomInfo,};
         }
-
-        dispatch(handleRoomRead(roomChangedId));
 
         return { ...newRooms, ...prevRooms }
       });
