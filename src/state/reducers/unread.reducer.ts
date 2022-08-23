@@ -11,7 +11,7 @@ const reducer = (state: RoomsStatusMap | null = null, action: {type: string, roo
             if(state && state[action.room.rid]) state[action.room.rid].alert = false, state[action.room.rid].unread = 0;
             return {...state};
         case "unread":
-            if(state && state[action.room.rid]) state[action.room.rid].alert = true;
+            if(state && state[action.room.rid]) state[action.room.rid].alert = true, state[action.room.rid].unread ++;
             return {...state};
         default:
             return state;
