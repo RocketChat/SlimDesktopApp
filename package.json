@@ -16,12 +16,42 @@
   "author": "Rocket.Chat",
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "make_targets": {
+        "win32": [
+          "squirrel"
+        ],
+        "darwin": [
+          "zip"
+        ],
+        "linux": [
+          "deb",
+          "rpm"
+        ]
+      },
+      "electronPackagerConfig": {
+        "packageManager": "yarn",
+        "executableName": "rocket-chat-slim-desktop-app"
+      },
+      "electronWinstallerConfig": {
+        "name": "rocket-chat-slim-desktop-app"
+      },
+      "electronInstallerDebian": {},
+      "electronInstallerRedhat": {},
+      "windowsStoreConfig": {
+        "packageName": "",
+        "name": "rocket-chat-slim-desktop-app"
+      },
+      "packagerConfig": {
+        "name": "rocket-chat-slim-desktop-app",
+        "icon": "./assets/icon.ico"
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "electron-ts-react"
+            "name": "rocket-chat-slim-desktop-app",
+            "setupIcon": "./assets/icon.ico",
+            "icon": "./assets/icon.ico"
           }
         },
         {
