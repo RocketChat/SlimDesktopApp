@@ -1,10 +1,11 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain, Tray, nativeImage, Menu } from "electron";
 import installExtension, {
   REACT_DEVELOPER_TOOLS,
 } from "electron-devtools-installer";
 import electron from "electron";
 import { Room } from "../interfaces/room";
 import Store from "electron-store";
+import trayIconLogo from "../../assets/icons/64x64.png";
 
 const storage = new Store();
 
@@ -56,8 +57,10 @@ const createWindow = () => {
       nodeIntegration: true,
       contextIsolation: false,
     },
+    icon: nativeImage.createFromDataURL(trayIconLogo)
   });
 
+  createTrayIcon(mainWindow);
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   mainWindow.on("closed", () => {
@@ -131,3 +134,39 @@ const closeAllWindowChats = () => {
     window?.close();
   });
 }
+
+
+const createTrayIcon = (rootWindow: BrowserWindow | null) => {
+
+  let trayIcon: Tray;
+  try {
+    trayIcon = new Tray(nativeImage.createFromDataURL(trayIconLogo));
+
+    const contextMenu = Menu.buildFromTemplate([
+        {
+            label: 'Show',
+            click: () => {
+              rootWindow?.show();
+              rootWindow?.focus();
+            },
+        },
+        {
+            label: 'Quit',
+            click: () => {
+                app.quit();
+            },
+        },
+    ]);
+
+    trayIcon.setContextMenu(contextMenu);
+    trayIcon.setToolTip('Rocket.Chat');
+    trayIcon.setTitle('Rocket.Chat');
+
+    return trayIcon;
+
+  } catch(err){
+    throw err;
+  }
+
+};
+

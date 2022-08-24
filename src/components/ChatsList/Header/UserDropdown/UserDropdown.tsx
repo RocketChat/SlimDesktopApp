@@ -65,7 +65,7 @@ function SetStatusBar(){
             <StatusHeadLine>Status</StatusHeadLine>
             {Object.keys(UserStatus).filter((v) => !isNaN(Number(v))).map((status, idx) =>{
                 return (
-                    <ActionsLi onClick={() => setStatus(idx)}>
+                    <ActionsLi onClick={() => setStatus(idx)} key={idx}>
                         <Status userStatus={idx} />
                         <StatusText>{UserStatus[idx]}</StatusText>
                     </ActionsLi>
