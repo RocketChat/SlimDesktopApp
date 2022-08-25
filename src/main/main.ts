@@ -5,7 +5,7 @@ import installExtension, {
 import electron from "electron";
 import { Room } from "../interfaces/room";
 import Store from "electron-store";
-import trayIconLogo from "../../assets/icons/64x64.png";
+// import trayIconLogo from "../../assets/icons/64x64.png";
 
 const storage = new Store();
 
@@ -56,8 +56,7 @@ const createWindow = () => {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-    },
-    icon: nativeImage.createFromDataURL(trayIconLogo)
+    }
   });
 
   createTrayIcon(mainWindow);
@@ -135,12 +134,18 @@ const closeAllWindowChats = () => {
   });
 }
 
+const getTrayIconURL= (notificationCount: number = 0) => {
+  if(notificationCount > 9) return require("../../assets/tray/notification-plus-9.png").default;
+  if(notificationCount == 0) return require("../../assets/tray/default.png").default;
+  return require(`../../assets/tray/notification-${notificationCount}.png`).default;
+}
 
 const createTrayIcon = (rootWindow: BrowserWindow | null) => {
 
   let trayIcon: Tray;
   try {
-    trayIcon = new Tray(nativeImage.createFromDataURL(trayIconLogo));
+    const trayIconImage = getTrayIconURL(0);
+    trayIcon = new Tray(nativeImage.createFromDataURL(trayIconImage));
 
     const contextMenu = Menu.buildFromTemplate([
         {
@@ -161,6 +166,12 @@ const createTrayIcon = (rootWindow: BrowserWindow | null) => {
     trayIcon.setContextMenu(contextMenu);
     trayIcon.setToolTip('Rocket.Chat');
     trayIcon.setTitle('Rocket.Chat');
+
+    ipcMain.on("unread-messages-count", (e, count: number) => {
+      if(!count) return;
+      const trayIconImage = getTrayIconURL(count);
+      trayIcon.setImage(nativeImage.createFromDataURL(trayIconImage));
+    });
 
     return trayIcon;
 
