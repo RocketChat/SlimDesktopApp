@@ -2,16 +2,16 @@ interface RoomsStatusMap {
     [_id: string]: any
 }
 
-const reducer = (state: RoomsStatusMap | null = null, action: {type: string, room: any, payload: any}) => {
+const reducer = (state: {count:Number, rooms:RoomsStatusMap} | null = null, action: {type: string, room: any, payload: any}) => {
     switch(action.type){
         case "update":
-            state = {...action.payload};
+            state = {count:0, rooms:{...action.payload}};
             return {...state};
         case "read":
-            if(state && state[action.room.rid]) state[action.room.rid].alert = false, state[action.room.rid].unread = 0;
+            if(state && state.rooms[action.room.rid]) state.rooms[action.room.rid].alert = false, state.rooms[action.room.rid].unread = 0;
             return {...state};
         case "unread":
-            if(state && state[action.room.rid]) state[action.room.rid].alert = true, state[action.room.rid].unread ++;
+            if(state && state.rooms[action.room.rid]) state.rooms[action.room.rid].alert = true, state.rooms[action.room.rid].unread ++;
             return {...state};
         default:
             return state;
