@@ -64,6 +64,16 @@ function List(props: any) {
         });
     }, []);
 
+    const unreadNumberCount = useSelector((state: any) => state.unread && state.unread.count);
+
+    useEffect(() => {
+        sendNewUnreadMessagesNumber();
+    }, [unreadNumberCount]);
+
+    const sendNewUnreadMessagesNumber = () => {
+        ipcRenderer.send("unread-messages-count", unreadNumberCount);
+    }
+
     let rooms: any = props.rooms;
     return (
         <Container column marginTop="10px" overflowScroll>
