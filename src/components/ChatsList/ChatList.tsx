@@ -117,7 +117,7 @@ function ChatList() {
         return { ...newRooms, ...prevRooms }
       });
 
-      if(newMessage){
+      if(newMessage && !(newRoomInfo.lastMessage?.u._id == getUserID())){
         dispatch(handleRoomRead(roomChangedId));
         dispatch(handleNewNotification(newRoomInfo.lastMessage));
       }
@@ -134,7 +134,7 @@ function ChatList() {
     loginIfNotAndLoadChats();
   }, []);
 
-  const roomsStatus = useSelector((state: any) => state.unread);
+  const roomsStatus = useSelector((state: any) => state.unread && state.unread.rooms);
   return (
     <Container>
       { userID ? (<Header />) : (null) }
