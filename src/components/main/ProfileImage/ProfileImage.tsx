@@ -6,6 +6,8 @@ import RocketChat from '../../../sdk';
 import { getUserID } from '../../../util/user.util';
 import { getUserStatusByUsername } from '../../../util/status.util';
 import Status from "./Status";
+import { useDispatch } from "react-redux";
+import { updateUserpresence } from "../../../state/actions";
 
 const ProfileImageTag = styled.img`
     border-radius:15%;
@@ -24,6 +26,7 @@ const Container = styled.div`
 
 const ProfileImage = (props: any) => {
     const [userStatus, setUserStatus] = useState<UserStatus>(UserStatus.OFFLINE);
+    const dispatch = useDispatch();
 
     const parseOnStatusChange = async (ddpMessage: any) => {
         const { eventName } = ddpMessage.fields;
@@ -34,6 +37,7 @@ const ProfileImage = (props: any) => {
             if(userID && userID.startsWith(id)){
                 let newUserStatus: UserStatus = Number(status);
                 setUserStatus(newUserStatus);
+                if(userID == getUserID()) dispatch(updateUserpresence(newUserStatus));
             }
         }
     }

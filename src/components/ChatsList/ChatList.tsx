@@ -10,7 +10,7 @@ import { Room } from "../../interfaces/room";
 import { useNavigate } from 'react-router-dom';
 import { realTimeLoginWithAuthToken } from "../../util/login.util";
 import { registerUserStatusChangeSubscription } from "../../util/status.util";
-import { handleRoomRead, updateRoomsStatus } from "../../state/actions";
+import { handleNewNotification, handleRoomRead, updateRoomsStatus } from "../../state/actions";
 import { getRoomsStatus } from "../../util/subscriptions.util";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -23,6 +23,12 @@ const Container = styled.div`
 
 interface RoomsMap {
   [_id: string]: Room
+}
+
+const isNewMessage = (lastMessageDate: any, newMessageDate: any) => {
+  const firstTime = lastMessageDate ? (lastMessageDate["$date"] || new Date(lastMessageDate).getTime()) : 0;
+  const secondTime = newMessageDate ? (newMessageDate["$date"] || new Date(newMessageDate).getTime()) : 0;
+  return secondTime > firstTime;
 }
 
 function ChatList() {
@@ -89,26 +95,32 @@ function ChatList() {
       const roomChanged: Room = ddpMessage.fields.args[1];
       const roomChangedId: string = roomChanged._id;
       const newRoomInfo = getRoomInfo(roomChanged);
-      dispatch(handleRoomRead(roomChangedId));
 
+      let newMessage: boolean = false;
       setRooms((prevRooms) => {
         let newRooms : RoomsMap = {};
         // check if new message, then put the chat on the top of the queue
 
-        const lmDate2 = newRoomInfo.lm ? (newRoomInfo.lm["$date"] || new Date(newRoomInfo.lm).getTime()) : 0;
-        const lmDate1 = prevRooms[topRoomID] ? (prevRooms[topRoomID].lm["$date"] || new Date(prevRooms[topRoomID].lm).getTime()) : 0;
-
-        if(!topRoomID || lmDate1 < lmDate2){
+        if(
+          (!topRoomID) ||
+          (prevRooms[topRoomID].lm && newRoomInfo.lm &&isNewMessage(prevRooms[topRoomID].lm, newRoomInfo.lm))
+        ){
           newRooms[roomChangedId] = {...newRoomInfo};
           delete prevRooms[roomChangedId];
           topRoomID = roomChangedId;
+          newMessage = true;
         } else {
           // otherwise, just change the room
-          prevRooms[roomChangedId] = {...newRoomInfo,};
+          prevRooms[roomChangedId] = {...newRoomInfo};
         }
 
         return { ...newRooms, ...prevRooms }
       });
+
+      if(newMessage && !(newRoomInfo.lastMessage?.u._id == getUserID())){
+        dispatch(handleRoomRead(roomChangedId));
+        dispatch(handleNewNotification(newRoomInfo.lastMessage));
+      }
 
     });
   }
@@ -122,7 +134,7 @@ function ChatList() {
     loginIfNotAndLoadChats();
   }, []);
 
-  const roomsStatus = useSelector((state: any) => state.unread);
+  const roomsStatus = useSelector((state: any) => state.unread && state.unread.rooms);
   return (
     <Container>
       { userID ? (<Header />) : (null) }

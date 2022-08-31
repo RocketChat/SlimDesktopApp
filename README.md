@@ -37,6 +37,8 @@ yarn start
 - [x] Parsing Message Threads
 - [x] Add Emoji Picker to Chat Windows
 - [x] Enable users to send message with attachments(images, videos, files, ...etc)
+- [x] Notifications Functionality with Changing Status
+- [x] Tray Icon with badge showing notifications number
 
 ### Screenshots
 

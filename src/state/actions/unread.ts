@@ -30,13 +30,11 @@ const unreadRoom = (roomId: string) => {
 }
 
 const handleRoomRead = (roomId: string) => {
-    console.log("Called");
     return (dispatch: any, getState: any) => {
         const openedWindows = getState().openedWindows;
         if(openedWindows[roomId]){
             dispatch(readRoom(roomId));
         } else {
-            console.log("Dispatch Unread!");
             dispatch(unreadRoom(roomId));
         }
     }

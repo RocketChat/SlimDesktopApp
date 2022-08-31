@@ -24,7 +24,7 @@ module.exports = [
     use: ["style-loader", "css-loader"],
   },
   {
-    test: /\.(svg|ico|icns)$/,
+    test: /\.(svg|ico|icns|mp3)$/,
     loader: "file-loader",
     options: {
       name: "[path][name].[ext]",
