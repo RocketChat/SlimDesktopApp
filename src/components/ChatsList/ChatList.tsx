@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { hot } from "react-hot-loader/root";
-import { getListOfRooms, subscribeToRooms, onRoomsChange, getRoomInfo } from "../../util/chatsList.util";
+import { getListOfRooms, subscribeToRooms, onRoomsChange, getRoomInfo, handleListOfRooms } from "../../util/chatsList.util";
 import { getUserID } from "../../util/user.util";
 import Footer from "./Footer/Footer";
 import Header from "./Header/Header";
@@ -13,12 +13,14 @@ import { registerUserStatusChangeSubscription } from "../../util/status.util";
 import { handleNewNotification, handleRoomRead, updateRoomsStatus } from "../../state/actions";
 import { getRoomsStatus } from "../../util/subscriptions.util";
 import { useDispatch, useSelector } from "react-redux";
+import { spollightWord } from "../../util/spotlight.util";
+import SearchInput from "./Header/SearchInput/SearchInput";
 
 const Container = styled.div`
-    background-color: #2f343d;
-    height:100vh;
-    max-width: 500px;
-    overflow: hidden;
+  background-color: #2f343d;
+  height:100vh;
+  max-width: 500px;
+  overflow: hidden;
 `
 
 interface RoomsMap {
@@ -36,6 +38,9 @@ function ChatList() {
   const [rooms, setRooms] = useState<RoomsMap>({});
   const [userID, setUserID] = useState<string | undefined>();
 
+  const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [roomsSearching, setRoomsSearching] = useState<RoomsMap>({});
+
 
   const dispatch = useDispatch();
 
@@ -45,6 +50,25 @@ function ChatList() {
   const navigateToLogin = () => navigate('/');
 
 
+  const goSearchWord = async (word: string) => {
+    const searchingRooms = await spollightWord(word);
+
+    const mergedRooms = await handleListOfRooms([
+      ...searchingRooms.rooms,
+      ...searchingRooms.users
+    ]);
+
+    setRoomsSearching(() => {
+      let newRooms: RoomsMap = {};
+      mergedRooms.map((Room) => {
+        newRooms[Room._id] = Room;
+      });
+
+      newRooms = {...newRooms};
+      return newRooms;
+    });
+
+  }
 
   const getRoomsList = async () => {
     const fetchedRooms: Room[] = await getListOfRooms();
@@ -135,10 +159,12 @@ function ChatList() {
   }, []);
 
   const roomsStatus = useSelector((state: any) => state.unread && state.unread.rooms);
+
   return (
     <Container>
-      { userID ? (<Header />) : (null) }
-      <List rooms={rooms} roomsStatus={roomsStatus} />
+      { userID ? (<Header setIsSearching={setIsSearching} />) : (null) }
+      { isSearching && <SearchInput goSearchWord={goSearchWord} /> }
+      <List rooms={isSearching ? roomsSearching : rooms} roomsStatus={roomsStatus} />
       <Footer />
     </Container>
   );
