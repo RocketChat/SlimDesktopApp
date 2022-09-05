@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from "styled-components";
 import rcLogo from "../ChatsList/Footer/logo.png";
 import { getCurrentServer } from "../../util/server.util";
+import LoaderSpinner from "../main/LoaderSpinner/LoaderSpinner";
 
 const Container = styled.div`
     width: 100%;
@@ -127,6 +128,14 @@ function Login() {
     useEffect(() => {
         tryLoginWithAuthToken();
     }, []);
+
+    if(loginDisabled){
+        return (
+            <Container>
+                <LoaderSpinner />
+            </Container>
+        );
+    }
 
     return (
         <Container>

@@ -6,6 +6,7 @@ import { IoCreateOutline } from 'react-icons/io5';
 import { getUsername, getUserID } from "../../../util/user.util";
 import ProfileImage from "../../main/ProfileImage/ProfileImage";
 import UserDropdown from "./UserDropdown/UserDropdown";
+import LoaderSpinner from "../../main/LoaderSpinner/LoaderSpinner";
 const Container = styled.div`
     display: flex;
     align-items: center;
@@ -58,7 +59,15 @@ function Header(props: any) {
         getUserInfoAfterLoading();
     }, []);
 
-    return loaded && (
+    if(!loaded){
+        return (
+          <Container>
+            <LoaderSpinner />
+          </Container>
+        );
+    }
+
+    return (
     <Container>
         <ImageContainer onClick={toggleDropdown}>
             <ProfileImage username={username} id={ID} size={"large"} showStatus={true} />

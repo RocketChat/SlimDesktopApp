@@ -15,6 +15,7 @@ import { getRoomsStatus } from "../../util/subscriptions.util";
 import { useDispatch, useSelector } from "react-redux";
 import { spollightWord } from "../../util/spotlight.util";
 import SearchInput from "./Header/SearchInput/SearchInput";
+import LoaderSpinner from "../main/LoaderSpinner/LoaderSpinner";
 
 const Container = styled.div`
   background-color: #2f343d;
@@ -40,6 +41,8 @@ function ChatList() {
 
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [roomsSearching, setRoomsSearching] = useState<RoomsMap>({});
+
+  const [loaded, setLoaded] = useState<boolean>(false);
 
 
   const dispatch = useDispatch();
@@ -109,6 +112,7 @@ function ChatList() {
     } else {
       await loadRoomsAndRegisterSubscriptions();
     }
+    setLoaded(true);
   }
 
 
@@ -159,6 +163,14 @@ function ChatList() {
   }, []);
 
   const roomsStatus = useSelector((state: any) => state.unread && state.unread.rooms);
+
+  if(!loaded){
+    return (
+      <Container>
+        <LoaderSpinner />
+      </Container>
+    );
+  }
 
   return (
     <Container>

@@ -11,6 +11,7 @@ import { DDPMessage } from "../../interfaces/sdk";
 import styled from "styled-components"
 import { MESSAGES_LOAD_PER_REQUEST } from "../../constants";
 import { useSelector } from "react-redux";
+import LoaderSpinner from "../main/LoaderSpinner/LoaderSpinner";
 
 const Container = styled.div`
     height: 100%;
@@ -145,7 +146,15 @@ function ChatWindow(props: {isThread: boolean}) {
     else loginToThread();
   }, []);
 
-  return loaded ? (
+  if(!loaded){
+    return (
+      <Container>
+        <LoaderSpinner />
+      </Container>
+    );
+  }
+
+  return (
     <Container >
       {!props.isThread &&
       <HeaderFooterContainer>
@@ -163,7 +172,7 @@ function ChatWindow(props: {isThread: boolean}) {
         <MessageForm messageToEdit={messageToEdit} setMessageToEdit={setMessageToEdit} isThread={props.isThread && tmid} />
       </HeaderFooterContainer>
     </Container>
-  ) : null;
+  );
 }
 
 export default hot(ChatWindow);
