@@ -34,10 +34,12 @@ function Header(props: any) {
     const [username, setUsername] = useState<string | undefined>();
     const [ID, setUserID] = useState<string | undefined>();
     const [dropDownShow, setDropDownShow] = useState<boolean>(false);
+    const [loaded, setLoaded] = useState<boolean>(false);
 
     const getUserInfoAfterLoading = async () => {
         setUsername(getUsername());
         setUserID(getUserID());
+        setLoaded(true);
     }
 
     const toggleDropdown = () => {
@@ -56,7 +58,7 @@ function Header(props: any) {
         getUserInfoAfterLoading();
     }, []);
 
-    return (
+    return loaded && (
     <Container>
         <ImageContainer onClick={toggleDropdown}>
             <ProfileImage username={username} id={ID} size={"large"} showStatus={true} />
