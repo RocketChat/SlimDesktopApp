@@ -24,7 +24,7 @@ const handleStatusBackgroundImage = (userStatus: UserStatus)  => {
       case UserStatus.BUSY:
         return `url("${busySvg}")`; // Red
     case UserStatus.AWAY:
-        return `url("${awaySvg}")`; // Red
+        return `url("${awaySvg}")`; // Yellow
     default:
         return "none";
     }
