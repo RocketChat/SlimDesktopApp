@@ -4,6 +4,7 @@ export interface Room {
 
     name: string;
     fname?: string;
+    username?: string;
 
     lastMessage?: RealtimeAPIMessage;
     lm?: { $date: number };

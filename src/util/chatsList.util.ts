@@ -9,7 +9,7 @@ const getRoomInfo = (room: Room): Room => {
         name: room.fname || room.name,
         lastMessage: room.lastMessage,
         lm: room.lm,
-        avatarLink: "room/" + room._id,
+        avatarLink: room.username ? room.username : "room/" + room._id,
     }
 
     const username: string|undefined = getUsername();
@@ -22,9 +22,21 @@ const getRoomInfo = (room: Room): Room => {
             newRoom.name = room.usernames[1];
             newRoom.avatarLink = room.usernames[1];
         }
+    } else if(!newRoom.name && room.username){
+        newRoom.name = room.username;
     }
 
+
     return newRoom;
+}
+
+async function handleListOfRooms(rooms: Room[]) : Promise<Room[]> {
+    let newRooms: Room[] = rooms.map((room: Room) => {
+        let newRoom:Room = getRoomInfo(room);
+        return newRoom;
+    });
+
+    return newRooms;
 }
 
 async function getListOfRooms() : Promise<Room[]> {
@@ -69,4 +81,12 @@ function onRoomsChange(callback: any){
     });
 }
 
-export { getListOfRooms, getRoomAvatar, subscribeToRooms, onRoomsChange, isRoomDM, getRoomInfo };
+export {
+    handleListOfRooms,
+    getListOfRooms,
+    getRoomAvatar,
+    subscribeToRooms,
+    onRoomsChange,
+    isRoomDM,
+    getRoomInfo
+};

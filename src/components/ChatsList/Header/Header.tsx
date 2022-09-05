@@ -30,7 +30,7 @@ const Icon = styled.div`
     cursor: pointer;
 `
 
-function Header() {
+function Header(props: any) {
     const [username, setUsername] = useState<string | undefined>();
     const [ID, setUserID] = useState<string | undefined>();
     const [dropDownShow, setDropDownShow] = useState<boolean>(false);
@@ -44,6 +44,14 @@ function Header() {
         setDropDownShow(!dropDownShow);
     }
 
+    const goToSearchBar = () => {
+        props.setIsSearching(true);
+    }
+
+    const cancelSearchBar = () => {
+        props.setIsSearching(false);
+    }
+
     useEffect(() => {
         getUserInfoAfterLoading();
     }, []);
@@ -55,10 +63,23 @@ function Header() {
             {dropDownShow && <UserDropdown />}
         </ImageContainer>
         <IconsContainer>
-            <Icon><AiOutlineHome style={{color: '#FFF', fontSize:'18px'}} /></Icon>
-            <Icon><AiOutlineSearch style={{color: '#FFF', fontSize:'18px'}} /></Icon>
-            <Icon><AiOutlineGlobal style={{color: '#FFF', fontSize:'18px'}} /></Icon>
-            <Icon><IoCreateOutline style={{color: '#FFF', fontSize:'18px'}} /></Icon>
+
+            <Icon onClick={cancelSearchBar}>
+                <AiOutlineHome style={{color: '#FFF', fontSize:'18px'}} />
+            </Icon>
+
+            <Icon onClick={goToSearchBar}>
+                <AiOutlineSearch style={{color: '#FFF', fontSize:'18px'}} />
+            </Icon>
+
+            <Icon>
+                <AiOutlineGlobal style={{color: '#FFF', fontSize:'18px'}} />
+            </Icon>
+
+            <Icon>
+                <IoCreateOutline style={{color: '#FFF', fontSize:'18px'}} />
+            </Icon>
+
         </IconsContainer>
     </Container>
     );

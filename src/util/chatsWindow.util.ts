@@ -36,5 +36,19 @@ async function loadMessagesFromThread(threadId: string | undefined): Promise<Rea
     return res.reverse(); // make the thread message comes first (not last)
 }
 
+async function createDMWithUsername(username: string | undefined){
+    return await RocketChat.sdk.methodCall('createDirectMessage', username?.toLowerCase());
+}
 
-export { loadMessagesFromRoom, realTimeSubscribeToRoom, markRoomAsRead, loadMessagesFromThread };
+async function joinRoomWithID(roomId: string){
+    return await RocketChat.sdk.methodCall('joinRoom', roomId);
+}
+
+export {
+    loadMessagesFromRoom,
+    realTimeSubscribeToRoom,
+    markRoomAsRead,
+    loadMessagesFromThread,
+    createDMWithUsername,
+    joinRoomWithID
+};

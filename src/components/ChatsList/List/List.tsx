@@ -6,6 +6,7 @@ import { isRoomDM } from "../../../util/chatsList.util";
 import ProfileImage from "../../main/ProfileImage/ProfileImage";
 import { useDispatch, useSelector } from "react-redux";
 import { closeRoom, openRoom, readRoom } from "../../../state/actions";
+import { createDMWithUsername, joinRoomWithID } from "../../../util/chatsWindow.util";
 
 const { ipcRenderer } = window.require("electron");
 
@@ -96,8 +97,14 @@ function ChatItem(props: Room & {isOpened: boolean | null} & {roomsStatus: any})
         dispatch(readRoom(roomId));
     }
 
-    const openChatWindow = () => {
+    const openChatWindow = async () => {
         openRoomFunction(props._id);
+
+        try {
+            if(isRoomDM(props)) await createDMWithUsername(props.avatarLink); // avatarLink = username
+            else await joinRoomWithID(props._id);
+        } catch(err){}
+
         ipcRenderer.send("create-window-chat", {
             _id: props._id,
             name: props.name,
