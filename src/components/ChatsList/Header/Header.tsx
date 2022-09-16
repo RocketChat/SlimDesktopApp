@@ -6,6 +6,7 @@ import { IoCreateOutline } from 'react-icons/io5';
 import { getUsername, getUserID } from "../../../util/user.util";
 import ProfileImage from "../../main/ProfileImage/ProfileImage";
 import UserDropdown from "./UserDropdown/UserDropdown";
+import LoaderSpinner from "../../main/LoaderSpinner/LoaderSpinner";
 const Container = styled.div`
     display: flex;
     align-items: center;
@@ -34,10 +35,12 @@ function Header(props: any) {
     const [username, setUsername] = useState<string | undefined>();
     const [ID, setUserID] = useState<string | undefined>();
     const [dropDownShow, setDropDownShow] = useState<boolean>(false);
+    const [loaded, setLoaded] = useState<boolean>(false);
 
     const getUserInfoAfterLoading = async () => {
         setUsername(getUsername());
         setUserID(getUserID());
+        setLoaded(true);
     }
 
     const toggleDropdown = () => {
@@ -55,6 +58,14 @@ function Header(props: any) {
     useEffect(() => {
         getUserInfoAfterLoading();
     }, []);
+
+    if(!loaded){
+        return (
+          <Container>
+            <LoaderSpinner />
+          </Container>
+        );
+    }
 
     return (
     <Container>

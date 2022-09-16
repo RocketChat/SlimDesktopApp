@@ -27,7 +27,7 @@ function SearchInput(props: any) {
         await props.goSearchWord(word);
     }
 
-    const searchChange = async (e) => {
+    const searchChange = async (e: any) => {
         clearInterval(typingTimer);
         typingTimer = setTimeout(() => searchWord(e.target.value), typingInterval)
     }
